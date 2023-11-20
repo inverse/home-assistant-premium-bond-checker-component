@@ -1,0 +1,18 @@
+{
+    "config": {
+      "step": {
+        "user": {
+          "data": {
+            "holder_number": "Holder number"
+          }
+        }
+      },
+      "error": {
+        "invalid_holder_number": "The provided holder number is invalid.",
+        "unknown": "[%key:common::config_flow::error::unknown%]"
+      },
+      "abort": {
+        "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+      }
+    }
+  }

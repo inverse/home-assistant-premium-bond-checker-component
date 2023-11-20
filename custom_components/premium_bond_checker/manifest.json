@@ -1,0 +1,11 @@
+{
+  "codeowners": ["@inverse"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/inverse/home-assistant-premium-bond-checker-component",
+  "domain": "premium_bond_checker",
+  "iot_class": "cloud_polling",
+  "name": "Premium Bond Checker",
+  "requirements": ["premium-bond-checker==0.1.0"],
+  "version": "0.1.0"
+}

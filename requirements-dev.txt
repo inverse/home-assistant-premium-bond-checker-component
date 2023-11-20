@@ -1,0 +1,6 @@
+pytest
+pytest-cov
+pytest-homeassistant-custom-component
+pytest-asyncio
+# From manifest
+premium-bond-checker==0.1.0
