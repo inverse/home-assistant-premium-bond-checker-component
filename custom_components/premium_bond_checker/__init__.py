@@ -1,42 +1,56 @@
+""" Premium Bond Checker integration."""
+
 import logging
-import time
-from datetime import timedelta
-from typing import Any, Dict
 
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-
-from .const import DOMAIN, DEFAULT_SCAN_INTERVAL_WEEKS
+from .const import CONF_HOLDER_NUMBER, DOMAIN
+from .coordinator import PremiumBondCheckerData
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS = ["binary"]
+PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 
-def setup_platform(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    
-    username: str = entry.data[CONF_USERNAME]
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up Premium Bond Checker from a config entry."""
 
-    coordinator = PremiumBondCheckerDataUpdateCoordinator(
-        hass
+    _LOGGER.debug(
+        "Setting up entry for holder number: %s", entry.data[CONF_HOLDER_NUMBER]
     )
-    
-    hass.data[DOMAIN][entry.entry_id] = coordinator
-    hass.config_entries.async_setup_platforms(entry, PLATFORMS)
+
+    instance = await create_and_update_instance(hass, entry)
+    hass.data.setdefault(DOMAIN, {})
+
+    hass.data[DOMAIN][entry.entry_id] = instance
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
     return True
 
-    
 
-class PremiumBondCheckerDataUpdateCoordinator(DataUpdateCoordinator[Dict[str, Any]]):
-    def __init__(
-        self,
-        hass: HomeAssistant,
-    ):
-        self.hass = hass
-        update_interval = timedelta(weeks=DEFAULT_SCAN_INTERVAL_WEEKS)
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=update_interval)
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Unload a config entry."""
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    if unload_ok:
+        hass.data[DOMAIN].pop(entry.entry_id)
 
-    async def _async_update_data(self) -> dict[str, Any]:
-        client = Client()
-        return client.check(premium_bond_number)
+    return unload_ok
+
+
+async def create_and_update_instance(
+    hass, entry: ConfigEntry
+) -> PremiumBondCheckerData:
+    """Create and update a Premium Bond Checker instance."""
+    _LOGGER.debug(
+        "Registering instance for holder number: %s", entry.data[CONF_HOLDER_NUMBER]
+    )
+    instance = PremiumBondCheckerData(hass, entry.data[CONF_HOLDER_NUMBER])
+    _LOGGER.debug(
+        "Requesting instance update for holder number: %s",
+        entry.data[CONF_HOLDER_NUMBER],
+    )
+    await instance.async_config_entry_first_refresh()
+
+    return instance

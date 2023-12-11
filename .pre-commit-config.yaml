@@ -7,6 +7,7 @@ repos:
     - id: check-yaml
     - id: check-toml
     - id: check-added-large-files
+    - id: check-json
 -   repo: https://github.com/psf/black
     rev: 23.11.0
     hooks:
@@ -16,10 +17,11 @@ repos:
     hooks:
     - id: isort
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.7.0
+    rev: v1.7.1
     hooks:
     - id: mypy
 -   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.1.6
+    rev: v0.1.7
     hooks:
     - id: ruff
+      args: [ --fix ]
