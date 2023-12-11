@@ -26,7 +26,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> None:
         client.is_holder_number_valid, data[CONF_HOLDER_NUMBER]
     )
 
-    if is_valid_holder_number:
+    if not is_valid_holder_number:
         raise InvalidHolderNumber
 
 
@@ -40,6 +40,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[call
     ) -> config_entries.ConfigFlow:
         """Handle the initial step."""
         if user_input is None:
+            _LOGGER.debug("Showing empty form for holder number.")
             return self.async_show_form(
                 step_id="user", data_schema=STEP_USER_DATA_SCHEMA
             )
@@ -62,6 +63,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[call
             return self.async_create_entry(
                 title="Premium Bond Checker", data=user_input
             )
+
+        _LOGGER.debug("Showing form with errors.")
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
