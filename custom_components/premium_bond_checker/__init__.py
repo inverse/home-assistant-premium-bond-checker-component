@@ -14,18 +14,18 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Set up Premium Bond Checker from a config entry."""
 
     _LOGGER.debug(
-        "Setting up entry for holder number: %s", entry.data[CONF_HOLDER_NUMBER]
+        "Setting up entry for holder number: %s", config_entry.data[CONF_HOLDER_NUMBER]
     )
 
-    instance = await create_and_update_instance(hass, entry)
+    instance = await create_and_update_instance(hass, config_entry)
     hass.data.setdefault(DOMAIN, {})
 
-    hass.data[DOMAIN][entry.entry_id] = instance
-    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    hass.data[DOMAIN][config_entry.entry_id] = instance
+    await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
 
     return True
 
