@@ -56,7 +56,7 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
         return data.won
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Return the name of the sensor."""
         return self._name
 
