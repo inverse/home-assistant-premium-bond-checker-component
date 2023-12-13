@@ -44,7 +44,7 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
         self._name = (
             f"Premium Bond Checker {holder_number} {BOND_PERIODS_TO_NAME[bond_period]}"
         )
-        self._id = f"premiumbondchecker-{holder_number}-{bond_period}"
+        self._id = f"premium_bond_checker-{holder_number}-{bond_period}"
 
     @property
     def is_on(self) -> bool:
@@ -61,5 +61,5 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
         return self._name
 
     @property
-    def id(self) -> str:
+    def unique_id(self) -> str:
         return self._id
