@@ -61,7 +61,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[call
 
         if not errors:
             return self.async_create_entry(
-                title="Premium Bond Checker", data=user_input
+                title=user_input[CONF_HOLDER_NUMBER], data=user_input
             )
 
         _LOGGER.debug("Showing form with errors.")

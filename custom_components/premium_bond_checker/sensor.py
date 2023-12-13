@@ -20,20 +20,21 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Cardiff Waste sensor platform."""
-    instance = hass.data[DOMAIN][config_entry.entry_id]
+
+    coordinator = hass.data[DOMAIN][config_entry.entry_id]
     entities: list[BinarySensorEntity] = []
 
     for period in BOND_PERIODS:
         _LOGGER.debug("Adding sensor for %s", period)
         entities.append(
             PremiumBondCheckerSensor(
-                instance, config_entry.data[CONF_HOLDER_NUMBER], period
+                coordinator, config_entry.data[CONF_HOLDER_NUMBER], period
             )
         )
 
     async_add_entities(entities)
 
-
+    
 class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
     def __init__(self, coordinator, holder_number: str, bond_period: str):
         """Initialize the sensor."""
