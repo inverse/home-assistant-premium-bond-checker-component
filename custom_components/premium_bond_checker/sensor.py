@@ -19,7 +19,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up Cardiff Waste sensor platform."""
+    """Set up Premium Bond Checker sensor platform."""
 
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
     entities: list[BinarySensorEntity] = []
