@@ -9,7 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from premium_bond_checker.client import Result
 
-from .const import BOND_PERIODS, BOND_PERIODS_TO_NAME, CONF_HOLDER_NUMBER, DOMAIN
+from .const import BOND_PERIODS, CONF_HOLDER_NUMBER, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -41,8 +41,14 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
         super().__init__(coordinator)
         self._data = coordinator
         self._bond_period = bond_period
-        self._name = (
-            f"Premium Bond Checker {holder_number} {BOND_PERIODS_TO_NAME[bond_period]}"
+        self._name = self.hass.helpers.translation.localize(
+            "sensor.premium_bond_checker",
+            {
+                "holder_number": holder_number,
+                "bond_period_name": self.hass.helpers.translation.localize(
+                    f"bond_period.{bond_period}"
+                ),
+            },
         )
         self._id = f"premium_bond_checker-{holder_number}-{bond_period}"
 

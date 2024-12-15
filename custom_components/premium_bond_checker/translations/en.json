@@ -16,5 +16,13 @@
     "abort": {
       "already_configured": "Already configured"
     }
+  },
+  "sensor": {
+    "premium_bond_checker": "Premium Bond Checker for {holder_number} ({bond_period_name})"
+  },
+  "bond_period": {
+    "this_month": "This Month",
+    "last_six_months": "Last Six Months",
+    "unclaimed": "Unclaimed"
   }
 }
