@@ -10,3 +10,10 @@ BOND_PERIODS = [
     "last_six_months",
     "unclaimed",
 ]
+
+
+BOND_PERIODS_TO_NAME = {
+    "this_month": "This Month",
+    "last_six_months": "Last Six Months",
+    "unclaimed": "Unclaimed",
+}
