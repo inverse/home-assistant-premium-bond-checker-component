@@ -34,7 +34,7 @@ async def async_setup_entry(
 
     async_add_entities(entities)
 
-    
+
 class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
     def __init__(self, coordinator, holder_number: str, bond_period: str):
         """Initialize the sensor."""
