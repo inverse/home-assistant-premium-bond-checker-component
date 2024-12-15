@@ -24,11 +24,23 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
     entities: list[BinarySensorEntity] = []
 
-    for period in BOND_PERIODS:
-        _LOGGER.debug("Adding sensor for %s", period)
+    holder_number = config_entry.data[CONF_HOLDER_NUMBER]
+
+    for bond_period in BOND_PERIODS:
+        _LOGGER.debug("Adding sensor for %s - %s", holder_number, bond_period)
+
+        sensor_name = hass.helpers.translation.localize(
+            "sensor.premium_bond_checker",
+            {
+                "holder_number": holder_number,
+                "bond_period_name": hass.helpers.translation.localize(
+                    f"bond_period.{bond_period}"
+                ),
+            },
+        )
         entities.append(
             PremiumBondCheckerSensor(
-                coordinator, config_entry.data[CONF_HOLDER_NUMBER], period
+                coordinator, holder_number, bond_period, sensor_name
             )
         )
 
@@ -36,20 +48,14 @@ async def async_setup_entry(
 
 
 class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
-    def __init__(self, coordinator, holder_number: str, bond_period: str):
+    def __init__(
+        self, coordinator, holder_number: str, bond_period: str, sensor_name: str
+    ):
         """Initialize the sensor."""
         super().__init__(coordinator)
         self._data = coordinator
         self._bond_period = bond_period
-        self._name = self.hass.helpers.translation.localize(
-            "sensor.premium_bond_checker",
-            {
-                "holder_number": holder_number,
-                "bond_period_name": self.hass.helpers.translation.localize(
-                    f"bond_period.{bond_period}"
-                ),
-            },
-        )
+        self._name = sensor_name
         self._id = f"premium_bond_checker-{holder_number}-{bond_period}"
 
     @property
