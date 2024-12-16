@@ -28,34 +28,27 @@ async def async_setup_entry(
 
     for bond_period in BOND_PERIODS:
         _LOGGER.debug("Adding sensor for %s - %s", holder_number, bond_period)
-
-        sensor_name = hass.helpers.translation.localize(
-            "sensor.premium_bond_checker",
-            {
-                "holder_number": holder_number,
-                "bond_period_name": hass.helpers.translation.localize(
-                    f"bond_period.{bond_period}"
-                ),
-            },
-        )
         entities.append(
-            PremiumBondCheckerSensor(
-                coordinator, holder_number, bond_period, sensor_name
-            )
+            PremiumBondCheckerSensor(coordinator, holder_number, bond_period)
         )
 
     async_add_entities(entities)
 
 
 class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
-    def __init__(
-        self, coordinator, holder_number: str, bond_period: str, sensor_name: str
-    ):
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "premium_bond_checker"
+
+    def __init__(self, coordinator, holder_number: str, bond_period: str):
         """Initialize the sensor."""
         super().__init__(coordinator)
         self._data = coordinator
         self._bond_period = bond_period
-        self._name = sensor_name
+        self._attr_translation_placeholders = {
+            "holder_number": holder_number,
+            "bond_period": bond_period,
+        }
         self._id = f"premium_bond_checker-{holder_number}-{bond_period}"
 
     @property
