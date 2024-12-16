@@ -17,8 +17,10 @@
       "already_configured": "Already configured"
     }
   },
-  "sensor": {
-    "premium_bond_checker": "Premium Bond Checker for {holder_number} ({bond_period_name})"
+  "entity": {
+    "sensor": {
+      "premium_bond_checker": "Premium Bond Checker for {holder_number} ({bond_period})"
+    }
   },
   "bond_period": {
     "this_month": "This Month",

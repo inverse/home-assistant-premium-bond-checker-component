@@ -5,6 +5,7 @@ import logging
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from premium_bond_checker.client import Result
@@ -49,6 +50,7 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
             "holder_number": holder_number,
             "bond_period": bond_period,
         }
+        self._attr_device_info = DeviceInfo(name="Example device")
         self._id = f"premium_bond_checker-{holder_number}-{bond_period}"
 
     @property
@@ -59,12 +61,3 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
         _LOGGER.debug(f"Got {data.won} for {data.bond_period}")
 
         return data.won
-
-    @property
-    def name(self) -> str:
-        """Return the name of the sensor."""
-        return self._name
-
-    @property
-    def unique_id(self) -> str:
-        return self._id
