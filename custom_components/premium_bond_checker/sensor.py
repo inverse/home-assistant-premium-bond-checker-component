@@ -11,7 +11,13 @@ from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from premium_bond_checker.client import Result
 
-from .const import BOND_PERIODS, BOND_PERIODS_TO_NAME, CONF_HOLDER_NUMBER, DOMAIN
+from .const import (
+    BOND_PERIODS,
+    BOND_PERIODS_TO_NAME,
+    BOND_PERIODS_WITH_DETAILS,
+    CONF_HOLDER_NUMBER,
+    DOMAIN,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -33,6 +39,8 @@ async def async_setup_entry(
                 coordinator, config_entry.data[CONF_HOLDER_NUMBER], period
             )
         )
+
+    for period in BOND_PERIODS_WITH_DETAILS:
         entities.append(
             PremiumBondCheckerDetailSensor(
                 coordinator, config_entry.data[CONF_HOLDER_NUMBER], period, "header"

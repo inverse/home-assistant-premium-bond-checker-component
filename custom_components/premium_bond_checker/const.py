@@ -11,6 +11,10 @@ BOND_PERIODS = [
     "unclaimed",
 ]
 
+BOND_PERIODS_WITH_DETAILS = [
+    "this_month",
+]
+
 
 BOND_PERIODS_TO_NAME = {
     "this_month": "This Month",
