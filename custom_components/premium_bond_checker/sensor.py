@@ -3,9 +3,11 @@
 import logging
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from premium_bond_checker.client import Result
 
@@ -74,16 +76,17 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
     def unique_id(self) -> str:
         return self._id
 
+
 class PremiumBondCheckerDetailSensor(CoordinatorEntity, SensorEntity):
-    def __init__(self, coordinator, holder_number: str, bond_period: str, detail_type: str):
+    def __init__(
+        self, coordinator, holder_number: str, bond_period: str, detail_type: str
+    ):
         """Initialize the sensor."""
         super().__init__(coordinator)
         self._data = coordinator
         self._bond_period = bond_period
         self._detail_type = detail_type
-        self._name = (
-            f"Premium Bond Checker {holder_number} {BOND_PERIODS_TO_NAME[bond_period]} {detail_type}"
-        )
+        self._name = f"Premium Bond Checker {holder_number} {BOND_PERIODS_TO_NAME[bond_period]} {detail_type}"
         self._id = f"premium_bond_checker-{holder_number}-{bond_period}-{detail_type}"
 
     @property
