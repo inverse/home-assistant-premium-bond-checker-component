@@ -66,7 +66,6 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
         """Returns the result from the coordinator."""
         return self.coordinator.data.results.get(self._bond_period, {})
 
-
     @property
     def name(self) -> str:
         """Return the name of the sensor."""
