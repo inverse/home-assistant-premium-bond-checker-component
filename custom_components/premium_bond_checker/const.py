@@ -5,14 +5,13 @@ DEFAULT_SCAN_INTERVAL_WEEKS = 4
 CONF_HOLDER_NUMBER = "holder_number"
 
 
+ATTR_HEADER = "header"
+ATTR_TAGLINE = "tagline"
+
 BOND_PERIODS = [
     "this_month",
     "last_six_months",
     "unclaimed",
-]
-
-BOND_PERIODS_WITH_DETAILS = [
-    "this_month",
 ]
 
 

@@ -1,20 +1,20 @@
 """Support for Premium Bond Checker sensors."""
 
 import logging
+from typing import Any
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
-from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from premium_bond_checker.client import Result
 
 from .const import (
+    ATTR_HEADER,
+    ATTR_TAGLINE,
     BOND_PERIODS,
     BOND_PERIODS_TO_NAME,
-    BOND_PERIODS_WITH_DETAILS,
     CONF_HOLDER_NUMBER,
     DOMAIN,
 )
@@ -40,18 +40,6 @@ async def async_setup_entry(
             )
         )
 
-    for period in BOND_PERIODS_WITH_DETAILS:
-        entities.append(
-            PremiumBondCheckerDetailSensor(
-                coordinator, config_entry.data[CONF_HOLDER_NUMBER], period, "header"
-            )
-        )
-        entities.append(
-            PremiumBondCheckerDetailSensor(
-                coordinator, config_entry.data[CONF_HOLDER_NUMBER], period, "tagline"
-            )
-        )
-
     async_add_entities(entities)
 
 
@@ -69,11 +57,15 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool:
         """Return if won"""
-        data: Result = self.coordinator.data.results.get(self._bond_period, {})
+        _LOGGER.debug(f"Got {self.data.won} for {self.data.bond_period}")
 
-        _LOGGER.debug(f"Got {data.won} for {data.bond_period}")
+        return self.data.won
 
-        return data.won
+    @property
+    def data(self) -> Result:
+        """Returns the result from the coordinator."""
+        return self.coordinator.data.results.get(self._bond_period, {})
+
 
     @property
     def name(self) -> str:
@@ -84,33 +76,10 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
     def unique_id(self) -> str:
         return self._id
 
-
-class PremiumBondCheckerDetailSensor(CoordinatorEntity, SensorEntity):
-    def __init__(
-        self, coordinator, holder_number: str, bond_period: str, detail_type: str
-    ):
-        """Initialize the sensor."""
-        super().__init__(coordinator)
-        self._data = coordinator
-        self._bond_period = bond_period
-        self._detail_type = detail_type
-        self._name = f"Premium Bond Checker {holder_number} {BOND_PERIODS_TO_NAME[bond_period]} {detail_type}"
-        self._id = f"premium_bond_checker-{holder_number}-{bond_period}-{detail_type}"
-
     @property
-    def native_value(self) -> StateType:
-        """Return the state"""
-        data: Result = self.coordinator.data.results.get(self._bond_period, {})
-
-        _LOGGER.debug(f"Got {getattr(data, self._detail_type)} for {data.bond_period}")
-
-        return getattr(data, self._detail_type)
-
-    @property
-    def name(self) -> str:
-        """Return the name of the sensor."""
-        return self._name
-
-    @property
-    def unique_id(self) -> str:
-        return self._id
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return state attributes."""
+        return {
+            ATTR_HEADER: self.data.header,
+            ATTR_TAGLINE: self.data.tagline,
+        }
