@@ -31,6 +31,16 @@ async def async_setup_entry(
                 coordinator, config_entry.data[CONF_HOLDER_NUMBER], period
             )
         )
+        entities.append(
+            PremiumBondCheckerDetailSensor(
+                coordinator, config_entry.data[CONF_HOLDER_NUMBER], period, "header"
+            )
+        )
+        entities.append(
+            PremiumBondCheckerDetailSensor(
+                coordinator, config_entry.data[CONF_HOLDER_NUMBER], period, "tagline"
+            )
+        )
 
     async_add_entities(entities)
 
@@ -54,6 +64,36 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
         _LOGGER.debug(f"Got {data.won} for {data.bond_period}")
 
         return data.won
+
+    @property
+    def name(self) -> str:
+        """Return the name of the sensor."""
+        return self._name
+
+    @property
+    def unique_id(self) -> str:
+        return self._id
+
+class PremiumBondCheckerDetailSensor(CoordinatorEntity, SensorEntity):
+    def __init__(self, coordinator, holder_number: str, bond_period: str, detail_type: str):
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+        self._data = coordinator
+        self._bond_period = bond_period
+        self._detail_type = detail_type
+        self._name = (
+            f"Premium Bond Checker {holder_number} {BOND_PERIODS_TO_NAME[bond_period]} {detail_type}"
+        )
+        self._id = f"premium_bond_checker-{holder_number}-{bond_period}-{detail_type}"
+
+    @property
+    def native_value(self) -> StateType:
+        """Return the state"""
+        data: Result = self.coordinator.data.results.get(self._bond_period, {})
+
+        _LOGGER.debug(f"Got {getattr(data, self._detail_type)} for {data.bond_period}")
+
+        return getattr(data, self._detail_type)
 
     @property
     def name(self) -> str:
