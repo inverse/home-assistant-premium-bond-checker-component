@@ -1,4 +1,4 @@
-""" Coordinator for Premium Bond Checker integration. """
+"""Coordinator for Premium Bond Checker integration."""
 
 import logging
 from datetime import timedelta

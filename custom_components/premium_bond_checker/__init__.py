@@ -1,4 +1,4 @@
-""" Premium Bond Checker integration."""
+"""Premium Bond Checker integration."""
 
 import logging
 
