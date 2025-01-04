@@ -10,15 +10,15 @@ CONF_HOLDER_NUMBER = "holder_number"
 ATTR_HEADER = "header"
 ATTR_TAGLINE = "tagline"
 
-BOND_PERIODS = [
-    BondPeriod.THIS_MONTH,
-    BondPeriod.LAST_SIX_MONTHS,
-    BondPeriod.UNCLAIMED,
-]
+BOND_PERIODS = {
+    "this_month": BondPeriod.THIS_MONTH,
+    "last_six_months": BondPeriod.LAST_SIX_MONTHS,
+    "unclaimed": BondPeriod.UNCLAIMED,
+}
 
 
 BOND_PERIODS_TO_NAME = {
-    BondPeriod.THIS_MONTH: "This Month",
-    BondPeriod.LAST_SIX_MONTHS: "Last Six Months",
-    BondPeriod.UNCLAIMED: "Unclaimed",
+    "this_month": "This Month",
+    "last_six_months": "Last Six Months",
+    "unclaimed": "Unclaimed",
 }

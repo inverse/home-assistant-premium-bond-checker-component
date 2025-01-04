@@ -32,11 +32,14 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
     entities: list[BinarySensorEntity] = []
 
-    for period in BOND_PERIODS:
-        _LOGGER.debug("Adding sensor for %s", period)
+    for period_key, bond_period in BOND_PERIODS.items():
+        _LOGGER.debug("Adding sensor for %s", period_key)
         entities.append(
             PremiumBondCheckerSensor(
-                coordinator, config_entry.data[CONF_HOLDER_NUMBER], period
+                coordinator,
+                config_entry.data[CONF_HOLDER_NUMBER],
+                period_key,
+                bond_period,
             )
         )
 
@@ -44,15 +47,17 @@ async def async_setup_entry(
 
 
 class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
-    def __init__(self, coordinator, holder_number: str, bond_period: str):
+    def __init__(
+        self, coordinator, holder_number: str, period_key: str, bond_period: str
+    ):
         """Initialize the sensor."""
         super().__init__(coordinator)
         self._data = coordinator
         self._bond_period = bond_period
         self._name = (
-            f"Premium Bond Checker {holder_number} {BOND_PERIODS_TO_NAME[bond_period]}"
+            f"Premium Bond Checker {holder_number} {BOND_PERIODS_TO_NAME[period_key]}"
         )
-        self._id = f"premium_bond_checker-{holder_number}-{bond_period}"
+        self._id = f"premium_bond_checker-{holder_number}-{period_key}"
 
     @property
     def is_on(self) -> bool:
