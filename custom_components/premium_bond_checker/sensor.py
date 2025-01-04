@@ -124,7 +124,6 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
 
         _LOGGER.debug(f"Got next draw value of {self.coordinator.data}")
 
-
         return self.coordinator.data
 
     @property
