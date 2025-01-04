@@ -62,11 +62,13 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool:
         """Return if won"""
-        data: Result = self.coordinator.data.results[self._bond_period]
+        _LOGGER.debug(f"Got {self.data.won} for {self.data.bond_period}")
 
-        _LOGGER.debug(f"Got {data.won} for {data.bond_period}")
+        return self.data.won
 
-        return data.won
+    @property
+    def data(self) -> Result:
+        return self.coordinator.data.results[self._bond_period]
 
     @property
     def name(self) -> str:
@@ -80,9 +82,7 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return state attributes."""
-        data: Result = self.coordinator.data.results[self._bond_period]
-
         return {
-            ATTR_HEADER: data.header,
-            ATTR_TAGLINE: data.tagline,
+            ATTR_HEADER: self.data.header,
+            ATTR_TAGLINE: self.data.tagline,
         }
