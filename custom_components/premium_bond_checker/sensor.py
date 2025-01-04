@@ -4,12 +4,14 @@ import logging
 from typing import Any
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from premium_bond_checker.client import Result
 
+from . import COORDINATOR_CHECKER, COORDINATOR_NEXT_DRAW
 from .const import (
     ATTR_HEADER,
     ATTR_TAGLINE,
@@ -29,14 +31,27 @@ async def async_setup_entry(
 ) -> None:
     """Set up Premium Bond Checker sensor platform."""
 
-    coordinator = hass.data[DOMAIN][config_entry.entry_id]
-    entities: list[BinarySensorEntity] = []
+    checker_coordinator = hass.data[DOMAIN][config_entry.entry_id][COORDINATOR_CHECKER]
+
+    next_draw_coordinator = hass.data[DOMAIN][config_entry.entry_id][
+        COORDINATOR_NEXT_DRAW
+    ]
+
+    entities = []
+
+    _LOGGER.debug("Adding sensor for next draw")
+    entities.append(
+        PremiumBondNextDrawSensor(
+            next_draw_coordinator,
+            config_entry.data[CONF_HOLDER_NUMBER],
+        )
+    )
 
     for period_key, bond_period in BOND_PERIODS.items():
         _LOGGER.debug("Adding sensor for %s", period_key)
         entities.append(
             PremiumBondCheckerSensor(
-                coordinator,
+                checker_coordinator,
                 config_entry.data[CONF_HOLDER_NUMBER],
                 period_key,
                 bond_period,
@@ -52,7 +67,6 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
     ):
         """Initialize the sensor."""
         super().__init__(coordinator)
-        self._data = coordinator
         self._bond_period = bond_period
         self._name = (
             f"Premium Bond Checker {holder_number} {BOND_PERIODS_TO_NAME[period_key]}"
@@ -86,3 +100,34 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
             ATTR_HEADER: self.data.header,
             ATTR_TAGLINE: self.data.tagline,
         }
+
+
+class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
+    def __init__(self, coordinator, holder_number: str):
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+        self._name = f"Premium Bond Checker {holder_number} Next Draw"
+        self._id = f"premium_bond_checker-{holder_number}-next-draw"
+
+    @property
+    def name(self) -> str:
+        """Return the name of the sensor."""
+        return self._name
+
+    @property
+    def unique_id(self) -> str:
+        return self._id
+
+    @property
+    def native_value(self):
+        """Return the state of the sensor."""
+
+        _LOGGER.debug(f"Got next draw value of {self.coordinator.data}")
+
+
+        return self.coordinator.data
+
+    @property
+    def device_class(self) -> SensorDeviceClass | str | None:
+        """Return the device class of the sensor."""
+        return SensorDeviceClass.DATE
