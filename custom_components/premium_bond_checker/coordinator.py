@@ -20,7 +20,7 @@ MIN_TIME_BETWEEN_UPDATES = timedelta(days=1)
 class PremiumBondCheckerData(DataUpdateCoordinator):
     """Get the latest data and update the states."""
 
-    def __init__(self, hass: HomeAssistant, holder_number: str) -> None:
+    def __init__(self, hass: HomeAssistant, holder_number: str):
         """Init the premium bond checker data object."""
 
         self.hass = hass
