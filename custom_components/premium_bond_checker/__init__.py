@@ -5,6 +5,7 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from premium_bond_checker.exceptions import PremiumBondCheckerException
 
 from .const import (
     CONF_HOLDER_NUMBER,
@@ -73,7 +74,13 @@ async def create_and_update_next_draw_coordinator(
     """Create and update a Premium Bond Next Draw coordinator."""
     coordinator = PremiumBondNextDrawData(hass)
     _LOGGER.debug("Requesting instance update")
-    await coordinator.async_config_entry_first_refresh()
+    try:
+        await coordinator.async_config_entry_first_refresh()
+    except PremiumBondCheckerException as e:
+        _LOGGER.error(
+            "Failed to fetch next draw date: %s",
+            e,
+        )
 
     return coordinator
 
