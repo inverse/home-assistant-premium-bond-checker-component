@@ -6,6 +6,6 @@
   "domain": "premium_bond_checker",
   "iot_class": "cloud_polling",
   "name": "Premium Bond Checker",
-  "requirements": ["premium-bond-checker==0.3.1"],
+  "requirements": ["premium-bond-checker==0.4.0"],
   "version": "0.1.0"
 }

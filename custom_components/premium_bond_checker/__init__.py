@@ -6,8 +6,13 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import CONF_HOLDER_NUMBER, DOMAIN
-from .coordinator import PremiumBondCheckerData
+from .const import (
+    CONF_HOLDER_NUMBER,
+    COORDINATOR_CHECKER,
+    COORDINATOR_NEXT_DRAW,
+    DOMAIN,
+)
+from .coordinator import PremiumBondCheckerData, PremiumBondNextDrawData
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,11 +26,15 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         "Setting up entry for holder number: %s", config_entry.data[CONF_HOLDER_NUMBER]
     )
 
-    coordinator = await create_and_update_coordinator(hass, config_entry)
-
     config_entry.async_on_unload(config_entry.add_update_listener(update_listener))
     hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][config_entry.entry_id] = coordinator
+    hass.data[DOMAIN].setdefault(config_entry.entry_id, {})
+    hass.data[DOMAIN][config_entry.entry_id][
+        COORDINATOR_CHECKER
+    ] = await create_and_update_checker_coordinator(hass, config_entry)
+    hass.data[DOMAIN][config_entry.entry_id][
+        COORDINATOR_NEXT_DRAW
+    ] = await create_and_update_next_draw_coordinator(hass, config_entry)
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
 
@@ -41,7 +50,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return unload_ok
 
 
-async def create_and_update_coordinator(
+async def create_and_update_checker_coordinator(
     hass, entry: ConfigEntry
 ) -> PremiumBondCheckerData:
     """Create and update a Premium Bond Checker coordinator."""
@@ -53,6 +62,17 @@ async def create_and_update_coordinator(
         "Requesting instance update for holder number: %s",
         entry.data[CONF_HOLDER_NUMBER],
     )
+    await coordinator.async_config_entry_first_refresh()
+
+    return coordinator
+
+
+async def create_and_update_next_draw_coordinator(
+    hass, entry: ConfigEntry
+) -> PremiumBondNextDrawData:
+    """Create and update a Premium Bond Next Draw coordinator."""
+    coordinator = PremiumBondNextDrawData(hass)
+    _LOGGER.debug("Requesting instance update")
     await coordinator.async_config_entry_first_refresh()
 
     return coordinator

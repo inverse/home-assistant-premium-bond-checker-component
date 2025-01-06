@@ -17,6 +17,30 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 MIN_TIME_BETWEEN_UPDATES = timedelta(days=1)
 
 
+class PremiumBondNextDrawData(DataUpdateCoordinator):
+    """Get the latest data and update the states."""
+
+    def __init__(self, hass: HomeAssistant):
+        """Init the premium bond checker data object."""
+
+        self.hass = hass
+        self.client = Client()
+
+        super().__init__(
+            hass, _LOGGER, name=DOMAIN, update_interval=MIN_TIME_BETWEEN_UPDATES
+        )
+
+    async def _async_update_data(self):
+        """Get the latest data."""
+        _LOGGER.debug("Allowing instance update")
+        try:
+            return await self.hass.async_add_executor_job(
+                self.client.next_draw,
+            )
+        except Exception as err:
+            _LOGGER.warning("Experienced unexpected error while updating: %s", err)
+
+
 class PremiumBondCheckerData(DataUpdateCoordinator):
     """Get the latest data and update the states."""
 
