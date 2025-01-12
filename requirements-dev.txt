@@ -3,4 +3,4 @@ pytest-cov
 pytest-homeassistant-custom-component
 pytest-asyncio
 # From manifest
-premium-bond-checker==0.4.0
+premium-bond-checker==0.4.1
