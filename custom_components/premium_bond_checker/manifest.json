@@ -8,5 +8,5 @@
   "iot_class": "cloud_polling",
   "name": "Premium Bond Checker",
   "requirements": ["premium-bond-checker==0.4.2"],
-  "version": "0.1.0"
+  "version": "0.2.0"
 }
