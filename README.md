@@ -20,7 +20,8 @@ Repo: `https://github.com/inverse/home-assistant-premium-bond-checker-component`
 
 ## Example usage
 
-![image](https://github.com/user-attachments/assets/bbfa8e3f-ef4d-41b0-83d5-7dc577e4a2f1)
+<img src="https://github.com/user-attachments/assets/3f7394c1-cd96-4cbf-bc52-9ff41282eac2" width="400" />
+
 
 _Illustrative: when you really have won it will display the prize information
 
