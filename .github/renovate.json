@@ -5,5 +5,33 @@
   ],
   "pre-commit": {
     "enabled": true
-  }
+  },
+  "customManagers": [
+    {
+      "name": "python-manifest-requirements",
+      "fileMatch": [
+        "custom_components/*/manifest.json"
+      ],
+      "matchStrings": [
+        "\"requirements\": \\[(.*?)\\]"
+      ],
+      "versioning": "python",
+      "extractors": [
+        {
+          "matchStrings": [
+            "\"(.*?)(?:==|>=|>|<|<=|!=)(.*?)\""
+          ],
+          "depNameTemplate": "{{1}}",
+          "currentVersionTemplate": "{{2}}"
+        },
+        {
+          "matchStrings": [
+            "\"(.*?)\""
+          ],
+          "depNameTemplate": "{{1}}"
+        }
+      ],
+      "depType": "requirements"
+    }
+  ]
 }
