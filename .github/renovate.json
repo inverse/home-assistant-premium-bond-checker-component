@@ -8,30 +8,12 @@
   },
   "customManagers": [
     {
-      "name": "python-manifest-requirements",
-      "fileMatch": [
-        "custom_components/*/manifest.json"
-      ],
-      "matchStrings": [
-        "\"requirements\": \\[(.*?)\\]"
-      ],
-      "versioning": "python",
-      "extractors": [
-        {
-          "matchStrings": [
-            "\"(.*?)(?:==|>=|>|<|<=|!=)(.*?)\""
-          ],
-          "depNameTemplate": "{{1}}",
-          "currentVersionTemplate": "{{2}}"
-        },
-        {
-          "matchStrings": [
-            "\"(.*?)\""
-          ],
-          "depNameTemplate": "{{1}}"
-        }
-      ],
-      "depType": "requirements"
+       "customType": "regex",
+       "fileMatch": ["custom_components/*/manifest.json"],
+       "datasourceTemplate": "pypi",
+       "matchStrings": [
+         "\"(?<depName>[^\"=><!]+)(?:(?<operator>==|>=|>|<|<=|!=)(?<currentValue>[^\"=><!]+))?\""
+       ]
     }
   ]
 }
