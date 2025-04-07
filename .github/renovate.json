@@ -12,7 +12,7 @@
        "fileMatch": ["custom_components/*/manifest.json"],
        "datasourceTemplate": "pypi",
        "matchStrings": [
-         "\"(?<depName>[^\"=><!]+)(?:(?<operator>==|>=|>|<|<=|!=)(?<currentValue>[^\"=><!]+))?\""
+            "\"requirements\": \\[.*?\"(?<depName>premium-bond-checker)==(?<currentValue>\\d+\\.\\d+\\.\\d+)\".*?\\]"
        ]
     }
   ]
