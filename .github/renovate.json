@@ -9,10 +9,10 @@
   "customManagers": [
     {
        "customType": "regex",
-       "fileMatch": ["custom_components/*/manifest.json"],
+       "fileMatch": ["custom_components/premium_bond_checker/manifest.json"],
        "datasourceTemplate": "pypi",
        "matchStrings": [
-            "\"requirements\": \\[.*?\"(?<depName>premium-bond-checker)==(?<currentValue>\\d+\\.\\d+\\.\\d+)\".*?\\]"
+            "(?<depName>premium-bond-checker)==(?<currentValue>\\d+\\.\\d+\\.\\d+)"
        ]
     }
   ]
