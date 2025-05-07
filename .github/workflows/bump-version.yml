@@ -6,12 +6,12 @@ on:
       bump-type:
         description: 'Bump type'
         required: true
-        default: 'patch'
+        default: "patch"
         type: choice
         options:
-        - major
-        - minor
-        - patch
+          - major
+          - minor
+          - patch
 
 permissions:
   contents: write
