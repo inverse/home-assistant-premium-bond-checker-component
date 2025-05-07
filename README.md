@@ -53,7 +53,7 @@ actions:
 
 [hacs-url]: https://github.com/hacs/integration
 [hacs-badge]: https://img.shields.io/badge/hacs-default-orange.svg?style=flat-square
-[releas -badge]: https://img.shields.io/github/v/release/inverse/home-assistant-premium-bond-checker-component?style=flat-square
+[release-badge]: https://img.shields.io/github/v/release/inverse/home-assistant-premium-bond-checker-component?style=flat-square
 [downloads-badge]: https://img.shields.io/github/downloads/inverse/home-assistant-premium-bond-checker-component/total?style=flat-square
 [build-badge]: https://img.shields.io/github/actions/workflow/status/inverse/home-assistant-premium-bond-checker-component/build.yml?branch=main&style=flat-square
 
@@ -64,3 +64,4 @@ actions:
 [hacs]: https://hacs.xyz
 [hacs-custom-repo-guide]: https://hacs.xyz/docs/faq/custom_repositories
 [nsandi]: https://www.nsandi.com/
+[release-url]: https://github.com/inverse/home-assistant-premium-bond-checker-component/releases
