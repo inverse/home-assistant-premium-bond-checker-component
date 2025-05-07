@@ -12,8 +12,16 @@ jobs:
   pre-commit:
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version-file: '.python-version'
-    - uses: pre-commit/action@v3.0.1
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+      - name: Install prettier
+        run: npm ci
+      - name: Cache pre-commit environment
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            pre-commit-${{ runner.os }}-
+      - name: Run pre-commit
+        run: pre-commit run --all-files --show-diff-on-failure --color=always
