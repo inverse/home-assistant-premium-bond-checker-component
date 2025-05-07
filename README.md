@@ -19,7 +19,7 @@ It fetches data from [Nsandi], leveraging the [premium-bond-checker][premium-bon
 
 ## Installation
 
-It's available via [HACS][hacs] through the standard process for custom repositories Follow their [official guide][hacs-custom-repo-guide] for adding a custom repository.
+It's available via [HACS][hacs] through the standard process for custom repositories. Follow their [official guide][hacs-custom-repo-guide] for adding a custom repository.
 
 Repo: `https://github.com/inverse/home-assistant-premium-bond-checker-component`
 
