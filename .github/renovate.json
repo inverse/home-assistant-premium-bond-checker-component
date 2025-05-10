@@ -13,5 +13,6 @@
         "(?<depName>premium-bond-checker)==(?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ]
     }
-  ]
+  ],
+  "enabled": true
 }
