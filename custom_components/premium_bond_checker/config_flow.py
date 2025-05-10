@@ -7,7 +7,7 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
-from premium_bond_checker.client import Client
+from premium_bond_checker import Client
 
 from .const import CONF_HOLDER_NUMBER, DOMAIN
 

@@ -6,7 +6,7 @@ from datetime import timedelta
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from premium_bond_checker.client import Client
+from premium_bond_checker import Client
 
 from .const import DOMAIN
 

@@ -9,7 +9,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from premium_bond_checker.client import Result
+from premium_bond_checker import Result
 
 from . import COORDINATOR_CHECKER, COORDINATOR_NEXT_DRAW
 from .const import (
