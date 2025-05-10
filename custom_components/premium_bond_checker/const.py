@@ -1,4 +1,4 @@
-from premium_bond_checker.client import BondPeriod
+from premium_bond_checker import BondPeriod
 
 DOMAIN = "premium_bond_checker"
 
