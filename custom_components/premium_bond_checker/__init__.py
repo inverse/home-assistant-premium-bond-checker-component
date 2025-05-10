@@ -5,7 +5,7 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from premium_bond_checker import PremiumBondCheckerException
+from premium_bond_checker.exception import PremiumBondCheckerException
 
 from .const import (
     CONF_HOLDER_NUMBER,
