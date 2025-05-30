@@ -1,7 +1,7 @@
 """Support for Premium Bond Checker sensors."""
 
-from datetime import datetime
 import logging
+from datetime import datetime
 from typing import Any
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
@@ -144,9 +144,7 @@ class PremiumBondNextDrawDaysRemainingSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, next_draw_coordinator, holder_number: str):
         """Initialize the sensor."""
         super().__init__(next_draw_coordinator)
-        self._name = (
-            f"Premium Bond Checker {holder_number} Next Draw Days Remaining"
-        )
+        self._name = f"Premium Bond Checker {holder_number} Next Draw Days Remaining"
         self._id = f"premium_bond_checker-{holder_number}-next-draw-days-remaining"
 
     @property
