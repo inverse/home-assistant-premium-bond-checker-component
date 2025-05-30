@@ -1,6 +1,7 @@
 """Support for Premium Bond Checker sensors."""
 
 import logging
+from datetime import datetime
 from typing import Any
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
@@ -42,6 +43,13 @@ async def async_setup_entry(
     _LOGGER.debug("Adding sensor for next draw")
     entities.append(
         PremiumBondNextDrawSensor(
+            next_draw_coordinator,
+            config_entry.data[CONF_HOLDER_NUMBER],
+        )
+    )
+    _LOGGER.debug("Adding sensor for next draw days remaining")
+    entities.append(
+        PremiumBondNextDrawDaysRemainingSensor(
             next_draw_coordinator,
             config_entry.data[CONF_HOLDER_NUMBER],
         )
@@ -130,3 +138,37 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
     def device_class(self) -> SensorDeviceClass | str | None:
         """Return the device class of the sensor."""
         return SensorDeviceClass.DATE
+
+
+class PremiumBondNextDrawDaysRemainingSensor(CoordinatorEntity, SensorEntity):
+    def __init__(self, next_draw_coordinator, holder_number: str):
+        """Initialize the sensor."""
+        super().__init__(next_draw_coordinator)
+        self._name = f"Premium Bond Checker {holder_number} Next Draw Days Remaining"
+        self._id = f"premium_bond_checker-{holder_number}-next-draw-days-remaining"
+
+    @property
+    def name(self) -> str:
+        """Return the name of the sensor."""
+        return self._name
+
+    @property
+    def unique_id(self) -> str:
+        return self._id
+
+    @property
+    def native_value(self):
+        """Return the state of the sensor."""
+        if self.coordinator.data:
+            return (self.coordinator.data - datetime.now().date()).days
+        return None
+
+    @property
+    def device_class(self) -> SensorDeviceClass | str | None:
+        """Return the device class of the sensor."""
+        return None
+
+    @property
+    def native_unit_of_measurement(self) -> str | None:
+        """Return the unit of measurement."""
+        return "days"
