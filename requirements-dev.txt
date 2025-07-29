@@ -3,6 +3,6 @@ pytest
 pytest-cov
 pytest-homeassistant-custom-component
 pytest-asyncio
-bump-my-version==1.2.0
+bump-my-version==1.2.1
 # From manifest
 premium-bond-checker==1.0.4
