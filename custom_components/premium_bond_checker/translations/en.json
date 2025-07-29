@@ -16,5 +16,16 @@
     "abort": {
       "already_configured": "Already configured"
     }
+  },
+  "entity": {
+    "sensor": {
+      "next_draw": {
+        "state_attributes": {
+          "reveal_by": {
+            "name": "Reveal by"
+          }
+        }
+      }
+    }
   }
 }
