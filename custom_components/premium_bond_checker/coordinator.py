@@ -1,7 +1,8 @@
 """Coordinator for Premium Bond Checker integration."""
 
+import dataclasses
 import logging
-from datetime import timedelta
+from datetime import date, timedelta
 
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
@@ -17,6 +18,12 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 MIN_TIME_BETWEEN_UPDATES = timedelta(days=1)
 
 
+@dataclasses.dataclass
+class NextDrawDataResult:
+    next_draw_date: date
+    next_draw_reveal_by_date: date
+
+
 class PremiumBondNextDrawData(DataUpdateCoordinator):
     """Get the latest data and update the states."""
 
@@ -24,7 +31,6 @@ class PremiumBondNextDrawData(DataUpdateCoordinator):
         """Init the premium bond checker data object."""
 
         self.hass = hass
-        self.client = Client()
 
         super().__init__(
             hass, _LOGGER, name=DOMAIN, update_interval=MIN_TIME_BETWEEN_UPDATES
@@ -34,9 +40,14 @@ class PremiumBondNextDrawData(DataUpdateCoordinator):
         """Get the latest data."""
         _LOGGER.debug("Allowing instance update")
         try:
-            return await self.hass.async_add_executor_job(
-                self.client.next_draw,
+            next_draw_data = await self.hass.async_add_executor_job(
+                Client.next_draw,
             )
+            next_draw_reveal_by_date = await self.hass.async_add_executor_job(
+                Client.next_draw_results_reveal_by,
+            )
+
+            return NextDrawDataResult(next_draw_data, next_draw_reveal_by_date)
         except Exception as err:
             _LOGGER.warning("Experienced unexpected error while updating: %s", err)
 

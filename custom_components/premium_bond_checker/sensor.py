@@ -12,9 +12,10 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from premium_bond_checker.models import Result
 
-from . import COORDINATOR_CHECKER, COORDINATOR_NEXT_DRAW
+from . import COORDINATOR_CHECKER, COORDINATOR_NEXT_DRAW, PremiumBondNextDrawData
 from .const import (
     ATTR_HEADER,
+    ATTR_REVEAL_BY,
     ATTR_TAGLINE,
     BOND_PERIODS,
     BOND_PERIODS_TO_NAME,
@@ -111,9 +112,14 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
 
 
 class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
-    def __init__(self, coordinator, holder_number: str):
+    _attr_has_entity_name = True
+    _attr_translation_key = "next_draw"
+
+    def __init__(
+        self, next_draw_coordinator: PremiumBondNextDrawData, holder_number: str
+    ):
         """Initialize the sensor."""
-        super().__init__(coordinator)
+        super().__init__(next_draw_coordinator)
         self._name = f"Premium Bond Checker {holder_number} Next Draw"
         self._id = f"premium_bond_checker-{holder_number}-next-draw"
 
@@ -129,19 +135,27 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self):
         """Return the state of the sensor."""
-
         _LOGGER.debug(f"Got next draw value of {self.coordinator.data}")
 
-        return self.coordinator.data
+        return self.coordinator.data.next_draw_date
 
     @property
     def device_class(self) -> SensorDeviceClass | str | None:
         """Return the device class of the sensor."""
         return SensorDeviceClass.DATE
 
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return state attributes."""
+        return {
+            ATTR_REVEAL_BY: self.coordinator.data.next_draw_results_reveal_by_date,
+        }
+
 
 class PremiumBondNextDrawDaysRemainingSensor(CoordinatorEntity, SensorEntity):
-    def __init__(self, next_draw_coordinator, holder_number: str):
+    def __init__(
+        self, next_draw_coordinator: PremiumBondNextDrawData, holder_number: str
+    ):
         """Initialize the sensor."""
         super().__init__(next_draw_coordinator)
         self._name = f"Premium Bond Checker {holder_number} Next Draw Days Remaining"
@@ -159,9 +173,7 @@ class PremiumBondNextDrawDaysRemainingSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        if self.coordinator.data:
-            return (self.coordinator.data - datetime.now().date()).days
-        return None
+        return (self.coordinator.data.next_draw_date - datetime.now().date()).days
 
     @property
     def device_class(self) -> SensorDeviceClass | str | None:

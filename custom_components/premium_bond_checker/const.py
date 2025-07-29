@@ -12,6 +12,7 @@ COORDINATOR_NEXT_DRAW = "next_draw"
 
 ATTR_HEADER = "header"
 ATTR_TAGLINE = "tagline"
+ATTR_REVEAL_BY = "reveal_by"
 
 BOND_PERIODS = {
     "this_month": BondPeriod.THIS_MONTH,
