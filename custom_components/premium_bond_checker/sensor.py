@@ -148,7 +148,7 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return state attributes."""
         return {
-            ATTR_REVEAL_BY: self.coordinator.data.next_draw_results_reveal_by_date,
+            ATTR_REVEAL_BY: self.coordinator.data.next_draw_reveal_by_date,
         }
 
 
