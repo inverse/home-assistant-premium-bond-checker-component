@@ -3,6 +3,8 @@
 [![hacs][hacs-badge]][hacs-url]
 [![release][release-badge]][release-url]
 ![build][build-badge]
+![build][build-badge]
+![ruff][ruff-badge]
 
 A [Home Assistant][home-assistant] component for creating sensors for checking if your holder number(s) have won on the premium bonds.
 
@@ -54,6 +56,7 @@ actions:
 [hacs-badge]: https://img.shields.io/badge/hacs-default-orange.svg?style=flat-square
 [release-badge]: https://img.shields.io/github/v/release/inverse/home-assistant-premium-bond-checker-component?style=flat-square
 [build-badge]: https://img.shields.io/github/actions/workflow/status/inverse/home-assistant-premium-bond-checker-component/main.yml?branch=master&style=flat-square
+[ruff-badge]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v0.json
 
 <!-- Other -->
 
@@ -63,3 +66,4 @@ actions:
 [hacs-custom-repo-guide]: https://hacs.xyz/docs/faq/custom_repositories
 [nsandi]: https://www.nsandi.com/
 [release-url]: https://github.com/inverse/home-assistant-premium-bond-checker-component/releases
+[ruff]: https://github.com/astral-sh/ruff
