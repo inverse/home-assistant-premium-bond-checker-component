@@ -1,4 +1,4 @@
 [tools]
-"node" = "22.18.0"
+"node" = "22.20.0"
 "python" = "3.13.6"
 "pre-commit" = "4.3.0"
