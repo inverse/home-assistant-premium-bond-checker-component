@@ -14,8 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: jdx/mise-action@v3
-      - name: Install prettier
-        run: npm ci
       - name: Cache pre-commit environment
         uses: actions/cache@v4
         with:
