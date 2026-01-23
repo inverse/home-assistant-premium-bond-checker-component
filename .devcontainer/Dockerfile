@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/python:2-3.13-bookworm
+FROM mcr.microsoft.com/devcontainers/python:3-3.13-bookworm
 
 RUN \
     apt update && \
