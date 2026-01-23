@@ -30,4 +30,4 @@ repos:
         entry: prettier --write --ignore-unknown
         language: node
         types: [text]
-        additional_dependencies: [prettier@3.6.2]
+        additional_dependencies: [prettier@3.8.1]
