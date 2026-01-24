@@ -7,9 +7,9 @@ __pycache__/
 .cloud
 .HA_VERSION
 .storage
+.ha_run.lock
 automations.yaml
 blueprints
-configuration.yaml
 deps
 home-assistant_v2*
 home-assistant.log*
