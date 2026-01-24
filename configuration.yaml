@@ -1,0 +1,8 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+logger:
+  default: info
+  logs:
+    custom_components.premium_bond_checker: debug
+    premium_bond_checker: debug
