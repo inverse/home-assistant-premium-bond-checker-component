@@ -48,8 +48,8 @@ class PremiumBondNextDrawData(DataUpdateCoordinator):
             )
 
             return NextDrawDataResult(next_draw_data, next_draw_reveal_by_date)
-        except Exception as err:
-            _LOGGER.warning("Experienced unexpected error while updating: %s", err)
+        except Exception:  # pylint: disable=broad-except
+            _LOGGER.warning("Unexpected error while updating next draw information")
 
 
 class PremiumBondCheckerData(DataUpdateCoordinator):
@@ -68,12 +68,10 @@ class PremiumBondCheckerData(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         """Get the latest data."""
-        _LOGGER.debug(
-            "Allowing instance update for holder number: %s", self.holder_number
-        )
+        _LOGGER.debug("Allowing Premium Bond results update")
         try:
             return await self.hass.async_add_executor_job(
                 self.client.check, self.holder_number
             )
-        except Exception as err:
-            _LOGGER.warning("Experienced unexpected error while updating: %s", err)
+        except Exception:  # pylint: disable=broad-except
+            _LOGGER.warning("Unexpected error while updating Premium Bond results")

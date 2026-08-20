@@ -19,8 +19,8 @@ from .const import (
     ATTR_TAGLINE,
     BOND_PERIODS,
     BOND_PERIODS_TO_NAME,
-    CONF_HOLDER_NUMBER,
     DOMAIN,
+    build_entity_unique_id,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -45,14 +45,14 @@ async def async_setup_entry(
     entities.append(
         PremiumBondNextDrawSensor(
             next_draw_coordinator,
-            config_entry.data[CONF_HOLDER_NUMBER],
+            config_entry.entry_id,
         )
     )
     _LOGGER.debug("Adding sensor for next draw days remaining")
     entities.append(
         PremiumBondNextDrawDaysRemainingSensor(
             next_draw_coordinator,
-            config_entry.data[CONF_HOLDER_NUMBER],
+            config_entry.entry_id,
         )
     )
 
@@ -61,7 +61,7 @@ async def async_setup_entry(
         entities.append(
             PremiumBondCheckerSensor(
                 checker_coordinator,
-                config_entry.data[CONF_HOLDER_NUMBER],
+                config_entry.entry_id,
                 period_key,
                 bond_period,
             )
@@ -72,20 +72,18 @@ async def async_setup_entry(
 
 class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
     def __init__(
-        self, coordinator, holder_number: str, period_key: str, bond_period: str
+        self, coordinator, config_entry_id: str, period_key: str, bond_period: str
     ):
         """Initialize the sensor."""
         super().__init__(coordinator)
         self._bond_period = bond_period
-        self._name = (
-            f"Premium Bond Checker {holder_number} {BOND_PERIODS_TO_NAME[period_key]}"
-        )
-        self._id = f"premium_bond_checker-{holder_number}-{period_key}"
+        self._name = f"Premium Bonds — {BOND_PERIODS_TO_NAME[period_key]}"
+        self._id = build_entity_unique_id(config_entry_id, period_key)
 
     @property
     def is_on(self) -> bool:
         """Return if won"""
-        _LOGGER.debug(f"Got {self.data.won} for {self.data.bond_period}")
+        _LOGGER.debug("Received Premium Bond result for %s", self.data.bond_period)
 
         return self.data.won
 
@@ -116,12 +114,12 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
     _attr_translation_key = "next_draw"
 
     def __init__(
-        self, next_draw_coordinator: PremiumBondNextDrawData, holder_number: str
+        self, next_draw_coordinator: PremiumBondNextDrawData, config_entry_id: str
     ):
         """Initialize the sensor."""
         super().__init__(next_draw_coordinator)
-        self._name = f"Premium Bond Checker {holder_number} Next Draw"
-        self._id = f"premium_bond_checker-{holder_number}-next-draw"
+        self._name = "Premium Bonds — Next Draw"
+        self._id = build_entity_unique_id(config_entry_id, "next_draw")
 
     @property
     def name(self) -> str:
@@ -135,7 +133,7 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        _LOGGER.debug(f"Got next draw value of {self.coordinator.data}")
+        _LOGGER.debug("Received next draw value")
 
         return self.coordinator.data.next_draw_date
 
@@ -154,12 +152,12 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
 
 class PremiumBondNextDrawDaysRemainingSensor(CoordinatorEntity, SensorEntity):
     def __init__(
-        self, next_draw_coordinator: PremiumBondNextDrawData, holder_number: str
+        self, next_draw_coordinator: PremiumBondNextDrawData, config_entry_id: str
     ):
         """Initialize the sensor."""
         super().__init__(next_draw_coordinator)
-        self._name = f"Premium Bond Checker {holder_number} Next Draw Days Remaining"
-        self._id = f"premium_bond_checker-{holder_number}-next-draw-days-remaining"
+        self._name = "Premium Bonds — Next Draw Days Remaining"
+        self._id = build_entity_unique_id(config_entry_id, "next_draw_days_remaining")
 
     @property
     def name(self) -> str:

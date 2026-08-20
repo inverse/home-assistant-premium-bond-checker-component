@@ -21,11 +21,11 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: Bump version
         id: bump
-        uses: callowayproject/bump-my-version@1.2.6
+        uses: callowayproject/bump-my-version@a1e8e6d42407d130bdfb947f6c1089a702fc2609 # 1.2.6
         env:
           BUMPVERSION_TAG: "true"
         with:
