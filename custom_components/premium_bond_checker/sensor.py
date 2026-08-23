@@ -7,6 +7,7 @@ from typing import Any
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -178,9 +179,9 @@ class PremiumBondNextDrawDaysRemainingSensor(CoordinatorEntity, SensorEntity):
     @property
     def device_class(self) -> SensorDeviceClass | str | None:
         """Return the device class of the sensor."""
-        return None
+        return SensorDeviceClass.DURATION
 
     @property
     def native_unit_of_measurement(self) -> str | None:
         """Return the unit of measurement."""
-        return "days"
+        return UnitOfTime.DAYS
