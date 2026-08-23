@@ -5,7 +5,6 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from premium_bond_checker.exceptions import PremiumBondCheckerException
 
 from .const import (
     CONF_HOLDER_NUMBER,
@@ -13,7 +12,7 @@ from .const import (
     COORDINATOR_NEXT_DRAW,
     DOMAIN,
 )
-from .coordinator import PremiumBondCheckerData, PremiumBondNextDrawData
+from .coordinator import PremiumBondCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -32,10 +31,10 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     hass.data[DOMAIN].setdefault(config_entry.entry_id, {})
     hass.data[DOMAIN][config_entry.entry_id][
         COORDINATOR_CHECKER
-    ] = await create_and_update_checker_coordinator(hass, config_entry)
-    hass.data[DOMAIN][config_entry.entry_id][
-        COORDINATOR_NEXT_DRAW
-    ] = await create_and_update_next_draw_coordinator(hass, config_entry)
+    ] = await create_and_update_coordinator(hass, config_entry)
+    hass.data[DOMAIN][config_entry.entry_id][COORDINATOR_NEXT_DRAW] = hass.data[DOMAIN][
+        config_entry.entry_id
+    ][COORDINATOR_CHECKER]
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
 
@@ -51,36 +50,19 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return unload_ok
 
 
-async def create_and_update_checker_coordinator(
+async def create_and_update_coordinator(
     hass, entry: ConfigEntry
-) -> PremiumBondCheckerData:
+) -> PremiumBondCoordinator:
     """Create and update a Premium Bond Checker coordinator."""
     _LOGGER.debug(
         "Registering instance for holder number: %s", entry.data[CONF_HOLDER_NUMBER]
     )
-    coordinator = PremiumBondCheckerData(hass, entry.data[CONF_HOLDER_NUMBER])
+    coordinator = PremiumBondCoordinator(hass, entry.data[CONF_HOLDER_NUMBER])
     _LOGGER.debug(
         "Requesting instance update for holder number: %s",
         entry.data[CONF_HOLDER_NUMBER],
     )
     await coordinator.async_config_entry_first_refresh()
-
-    return coordinator
-
-
-async def create_and_update_next_draw_coordinator(
-    hass, entry: ConfigEntry
-) -> PremiumBondNextDrawData:
-    """Create and update a Premium Bond Next Draw coordinator."""
-    coordinator = PremiumBondNextDrawData(hass)
-    _LOGGER.debug("Requesting instance update")
-    try:
-        await coordinator.async_config_entry_first_refresh()
-    except PremiumBondCheckerException as e:
-        _LOGGER.error(
-            "Failed to fetch next draw date: %s",
-            e,
-        )
 
     return coordinator
 

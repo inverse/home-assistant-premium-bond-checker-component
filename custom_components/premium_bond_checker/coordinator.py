@@ -24,44 +24,21 @@ class NextDrawDataResult:
     next_draw_reveal_by_date: date
 
 
-class PremiumBondNextDrawData(DataUpdateCoordinator):
-    """Get the latest data and update the states."""
+@dataclasses.dataclass
+class PremiumBondData:
+    """Data object for the coordinator."""
 
-    def __init__(self, hass: HomeAssistant):
-        """Init the premium bond checker data object."""
-
-        self.hass = hass
-
-        super().__init__(
-            hass, _LOGGER, name=DOMAIN, update_interval=MIN_TIME_BETWEEN_UPDATES
-        )
-
-    async def _async_update_data(self):
-        """Get the latest data."""
-        _LOGGER.debug("Allowing instance update")
-        try:
-            next_draw_data = await self.hass.async_add_executor_job(
-                Client.next_draw,
-            )
-            next_draw_reveal_by_date = await self.hass.async_add_executor_job(
-                Client.next_draw_results_reveal_by,
-            )
-
-            return NextDrawDataResult(next_draw_data, next_draw_reveal_by_date)
-        except Exception as err:
-            raise UpdateFailed(f"Error communicating with API: {err}") from err
+    checker_data: dict
+    next_draw_data: NextDrawDataResult
 
 
-class PremiumBondCheckerData(DataUpdateCoordinator):
-    """Get the latest data and update the states."""
+class PremiumBondCoordinator(DataUpdateCoordinator):
+    """Unified coordinator for Premium Bond Checker."""
 
     def __init__(self, hass: HomeAssistant, holder_number: str):
         """Init the premium bond checker data object."""
-
-        self.hass = hass
         self.client = Client()
         self.holder_number = holder_number
-
         super().__init__(
             hass, _LOGGER, name=DOMAIN, update_interval=MIN_TIME_BETWEEN_UPDATES
         )
@@ -72,8 +49,17 @@ class PremiumBondCheckerData(DataUpdateCoordinator):
             "Allowing instance update for holder number: %s", self.holder_number
         )
         try:
-            return await self.hass.async_add_executor_job(
-                self.client.check, self.holder_number
-            )
+            return await self.hass.async_add_executor_job(self._fetch_all_data)
         except Exception as err:
             raise UpdateFailed(f"Error communicating with API: {err}") from err
+
+    def _fetch_all_data(self) -> PremiumBondData:
+        """Fetch all data synchronously."""
+        checker_data = self.client.check(self.holder_number)
+        next_draw_date = Client.next_draw()
+        next_draw_reveal_by_date = Client.next_draw_results_reveal_by()
+
+        return PremiumBondData(
+            checker_data=checker_data,
+            next_draw_data=NextDrawDataResult(next_draw_date, next_draw_reveal_by_date),
+        )
