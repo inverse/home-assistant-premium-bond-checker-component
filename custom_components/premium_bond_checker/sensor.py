@@ -1,7 +1,6 @@
 """Support for Premium Bond Checker sensors."""
 
 import logging
-from datetime import datetime
 from typing import Any
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
@@ -10,6 +9,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.util import dt
 from premium_bond_checker.models import Result
 
 from . import COORDINATOR_CHECKER, COORDINATOR_NEXT_DRAW, PremiumBondNextDrawData
@@ -173,7 +173,7 @@ class PremiumBondNextDrawDaysRemainingSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        return (self.coordinator.data.next_draw_date - datetime.now().date()).days
+        return (self.coordinator.data.next_draw_date - dt.now().date()).days
 
     @property
     def device_class(self) -> SensorDeviceClass | str | None:
