@@ -17,3 +17,5 @@ tts
 scenes.yaml
 scripts.yaml
 secrets.yaml
+/.enola/
+/.cache/

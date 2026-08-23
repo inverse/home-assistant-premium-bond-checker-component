@@ -13,7 +13,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import dt
 from premium_bond_checker.models import Result
 
-from . import COORDINATOR_CHECKER, COORDINATOR_NEXT_DRAW, PremiumBondNextDrawData
+from . import COORDINATOR_CHECKER, COORDINATOR_NEXT_DRAW, PremiumBondCoordinator
 from .const import (
     ATTR_HEADER,
     ATTR_REVEAL_BY,
@@ -35,23 +35,21 @@ async def async_setup_entry(
 
     checker_coordinator = hass.data[DOMAIN][config_entry.entry_id][COORDINATOR_CHECKER]
 
-    next_draw_coordinator = hass.data[DOMAIN][config_entry.entry_id][
-        COORDINATOR_NEXT_DRAW
-    ]
+    coordinator = hass.data[DOMAIN][config_entry.entry_id][COORDINATOR_NEXT_DRAW]
 
     entities = []
 
     _LOGGER.debug("Adding sensor for next draw")
     entities.append(
         PremiumBondNextDrawSensor(
-            next_draw_coordinator,
+            coordinator,
             config_entry.data[CONF_HOLDER_NUMBER],
         )
     )
     _LOGGER.debug("Adding sensor for next draw days remaining")
     entities.append(
         PremiumBondNextDrawDaysRemainingSensor(
-            next_draw_coordinator,
+            coordinator,
             config_entry.data[CONF_HOLDER_NUMBER],
         )
     )
@@ -94,7 +92,7 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
 
     @property
     def data(self) -> Result:
-        return self.coordinator.data.results[self._bond_period]
+        return self.coordinator.data.checker_data.results[self._bond_period]
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
@@ -110,11 +108,9 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
     _attr_translation_key = "next_draw"
     _attr_device_class = SensorDeviceClass.DATE
 
-    def __init__(
-        self, next_draw_coordinator: PremiumBondNextDrawData, holder_number: str
-    ):
+    def __init__(self, coordinator: PremiumBondCoordinator, holder_number: str):
         """Initialize the sensor."""
-        super().__init__(next_draw_coordinator)
+        super().__init__(coordinator)
         self._attr_name = f"Premium Bond Checker {holder_number} Next Draw"
         self._attr_unique_id = f"premium_bond_checker-{holder_number}-next-draw"
 
@@ -123,13 +119,13 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
         """Return the state of the sensor."""
         _LOGGER.debug(f"Got next draw value of {self.coordinator.data}")
 
-        return self.coordinator.data.next_draw_date
+        return self.coordinator.data.next_draw_data.next_draw_date
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return state attributes."""
         return {
-            ATTR_REVEAL_BY: self.coordinator.data.next_draw_reveal_by_date,
+            ATTR_REVEAL_BY: self.coordinator.data.next_draw_data.next_draw_reveal_by_date,
         }
 
 
@@ -137,11 +133,9 @@ class PremiumBondNextDrawDaysRemainingSensor(CoordinatorEntity, SensorEntity):
     _attr_device_class = SensorDeviceClass.DURATION
     _attr_native_unit_of_measurement = UnitOfTime.DAYS
 
-    def __init__(
-        self, next_draw_coordinator: PremiumBondNextDrawData, holder_number: str
-    ):
+    def __init__(self, coordinator: PremiumBondCoordinator, holder_number: str):
         """Initialize the sensor."""
-        super().__init__(next_draw_coordinator)
+        super().__init__(coordinator)
         self._attr_name = (
             f"Premium Bond Checker {holder_number} Next Draw Days Remaining"
         )
@@ -152,4 +146,6 @@ class PremiumBondNextDrawDaysRemainingSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        return (self.coordinator.data.next_draw_date - dt.now().date()).days
+        return (
+            self.coordinator.data.next_draw_data.next_draw_date - dt.now().date()
+        ).days
