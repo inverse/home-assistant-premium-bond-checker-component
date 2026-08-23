@@ -1,9 +1,8 @@
-FROM mcr.microsoft.com/devcontainers/python:3-3.13-bookworm
+FROM mcr.microsoft.com/devcontainers/python:dev-3.14-trixie
 
 RUN \
-    rm /etc/apt/sources.list.d/yarn.list && \
     apt update && \
-    apt install -y iptables iproute2 libturbojpeg0-dev ffmpeg libpcap0.8 curl && \
+    apt install -y iptables iproute2 libturbojpeg0-dev ffmpeg libpcap0.8t64 curl && \
     update-alternatives --set iptables /usr/sbin/iptables-legacy
 
 
@@ -13,6 +12,6 @@ RUN \
     aarch64) go2rtc_suffix="arm64" ;; \
     *) echo "Unsupported architecture: $(uname -m)" && exit 1 ;; \
     esac \
-    && curl -L https://github.com/AlexxIT/go2rtc/releases/download/v1.9.9/go2rtc_linux_${go2rtc_suffix} --output /bin/go2rtc \
+    && curl -L https://github.com/AlexxIT/go2rtc/releases/download/v1.9.14/go2rtc_linux_${go2rtc_suffix} --output /bin/go2rtc \
     && chmod +x /bin/go2rtc \
     && go2rtc --version
