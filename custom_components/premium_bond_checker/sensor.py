@@ -78,10 +78,10 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
         """Initialize the sensor."""
         super().__init__(coordinator)
         self._bond_period = bond_period
-        self._name = (
+        self._attr_name = (
             f"Premium Bond Checker {holder_number} {BOND_PERIODS_TO_NAME[period_key]}"
         )
-        self._id = f"premium_bond_checker-{holder_number}-{period_key}"
+        self._attr_unique_id = f"premium_bond_checker-{holder_number}-{period_key}"
 
     @property
     def is_on(self) -> bool:
@@ -95,15 +95,6 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
         return self.coordinator.data.results[self._bond_period]
 
     @property
-    def name(self) -> str:
-        """Return the name of the sensor."""
-        return self._name
-
-    @property
-    def unique_id(self) -> str:
-        return self._id
-
-    @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return state attributes."""
         return {
@@ -115,23 +106,15 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
 class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
     _attr_has_entity_name = True
     _attr_translation_key = "next_draw"
+    _attr_device_class = SensorDeviceClass.DATE
 
     def __init__(
         self, next_draw_coordinator: PremiumBondNextDrawData, holder_number: str
     ):
         """Initialize the sensor."""
         super().__init__(next_draw_coordinator)
-        self._name = f"Premium Bond Checker {holder_number} Next Draw"
-        self._id = f"premium_bond_checker-{holder_number}-next-draw"
-
-    @property
-    def name(self) -> str:
-        """Return the name of the sensor."""
-        return self._name
-
-    @property
-    def unique_id(self) -> str:
-        return self._id
+        self._attr_name = f"Premium Bond Checker {holder_number} Next Draw"
+        self._attr_unique_id = f"premium_bond_checker-{holder_number}-next-draw"
 
     @property
     def native_value(self):
@@ -139,11 +122,6 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
         _LOGGER.debug(f"Got next draw value of {self.coordinator.data}")
 
         return self.coordinator.data.next_draw_date
-
-    @property
-    def device_class(self) -> SensorDeviceClass | str | None:
-        """Return the device class of the sensor."""
-        return SensorDeviceClass.DATE
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
@@ -154,34 +132,22 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
 
 
 class PremiumBondNextDrawDaysRemainingSensor(CoordinatorEntity, SensorEntity):
+    _attr_device_class = SensorDeviceClass.DURATION
+    _attr_native_unit_of_measurement = UnitOfTime.DAYS
+
     def __init__(
         self, next_draw_coordinator: PremiumBondNextDrawData, holder_number: str
     ):
         """Initialize the sensor."""
         super().__init__(next_draw_coordinator)
-        self._name = f"Premium Bond Checker {holder_number} Next Draw Days Remaining"
-        self._id = f"premium_bond_checker-{holder_number}-next-draw-days-remaining"
-
-    @property
-    def name(self) -> str:
-        """Return the name of the sensor."""
-        return self._name
-
-    @property
-    def unique_id(self) -> str:
-        return self._id
+        self._attr_name = (
+            f"Premium Bond Checker {holder_number} Next Draw Days Remaining"
+        )
+        self._attr_unique_id = (
+            f"premium_bond_checker-{holder_number}-next-draw-days-remaining"
+        )
 
     @property
     def native_value(self):
         """Return the state of the sensor."""
         return (self.coordinator.data.next_draw_date - dt.now().date()).days
-
-    @property
-    def device_class(self) -> SensorDeviceClass | str | None:
-        """Return the device class of the sensor."""
-        return SensorDeviceClass.DURATION
-
-    @property
-    def native_unit_of_measurement(self) -> str | None:
-        """Return the unit of measurement."""
-        return UnitOfTime.DAYS
