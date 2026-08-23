@@ -6,7 +6,7 @@ from datetime import date, timedelta
 
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from premium_bond_checker.client import Client
 
 from .const import DOMAIN
@@ -49,7 +49,7 @@ class PremiumBondNextDrawData(DataUpdateCoordinator):
 
             return NextDrawDataResult(next_draw_data, next_draw_reveal_by_date)
         except Exception as err:
-            _LOGGER.warning("Experienced unexpected error while updating: %s", err)
+            raise UpdateFailed(f"Error communicating with API: {err}") from err
 
 
 class PremiumBondCheckerData(DataUpdateCoordinator):
@@ -76,4 +76,4 @@ class PremiumBondCheckerData(DataUpdateCoordinator):
                 self.client.check, self.holder_number
             )
         except Exception as err:
-            _LOGGER.warning("Experienced unexpected error while updating: %s", err)
+            raise UpdateFailed(f"Error communicating with API: {err}") from err
