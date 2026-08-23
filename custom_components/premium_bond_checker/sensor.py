@@ -48,13 +48,8 @@ async def async_setup_entry(
             config_entry.data[CONF_HOLDER_NUMBER],
         )
     )
-    _LOGGER.debug("Adding sensor for next draw days remaining")
-    entities.append(
-        PremiumBondNextDrawDaysRemainingSensor(
-            next_draw_coordinator,
-            config_entry.data[CONF_HOLDER_NUMBER],
-        )
-    )
+
+
 
     for period_key, bond_period in BOND_PERIODS.items():
         _LOGGER.debug("Adding sensor for %s", period_key)
@@ -152,35 +147,3 @@ class PremiumBondNextDrawSensor(CoordinatorEntity, SensorEntity):
         }
 
 
-class PremiumBondNextDrawDaysRemainingSensor(CoordinatorEntity, SensorEntity):
-    def __init__(
-        self, next_draw_coordinator: PremiumBondNextDrawData, holder_number: str
-    ):
-        """Initialize the sensor."""
-        super().__init__(next_draw_coordinator)
-        self._name = f"Premium Bond Checker {holder_number} Next Draw Days Remaining"
-        self._id = f"premium_bond_checker-{holder_number}-next-draw-days-remaining"
-
-    @property
-    def name(self) -> str:
-        """Return the name of the sensor."""
-        return self._name
-
-    @property
-    def unique_id(self) -> str:
-        return self._id
-
-    @property
-    def native_value(self):
-        """Return the state of the sensor."""
-        return (self.coordinator.data.next_draw_date - datetime.now().date()).days
-
-    @property
-    def device_class(self) -> SensorDeviceClass | str | None:
-        """Return the device class of the sensor."""
-        return None
-
-    @property
-    def native_unit_of_measurement(self) -> str | None:
-        """Return the unit of measurement."""
-        return "days"
