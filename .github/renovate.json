@@ -17,7 +17,7 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["\\.pre-commit-config\\.yaml$"],
+      "managerFilePatterns": ["/\\.pre-commit-config\\.yaml$/"],
       "datasourceTemplate": "npm",
       "matchStrings": [
         "additional_dependencies:\\s*\\[(?<depName>prettier)@(?<currentValue>\\d+\\.\\d+\\.\\d+)\\]"
