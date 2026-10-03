@@ -66,6 +66,17 @@ async def async_setup_entry(
             )
         )
 
+        _LOGGER.debug("Adding prize value sensor for %s", period_key)
+        entities.append(
+            PremiumBondPrizeValueSensor(
+                checker_coordinator,
+                config_entry.data[CONF_HOLDER_NUMBER],
+                period_key,
+                bond_period,
+                name,
+            )
+        )
+
     async_add_entities(entities)
 
 
@@ -100,6 +111,47 @@ class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
         return {
             ATTR_HEADER: self.data.header,
             ATTR_TAGLINE: self.data.tagline,
+        }
+
+
+class PremiumBondPrizeValueSensor(CoordinatorEntity, SensorEntity):
+    """Total prize value won for a bond period."""
+
+    _attr_device_class = SensorDeviceClass.MONETARY
+    _attr_native_unit_of_measurement = "GBP"
+    _attr_suggested_display_precision = 0
+
+    def __init__(
+        self,
+        coordinator: PremiumBondCoordinator,
+        holder_number: str,
+        period_key: str,
+        bond_period: str,
+        name: str,
+    ):
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+        self._bond_period = bond_period
+        self._attr_name = f"Premium Bond Checker {holder_number} {name} Prize"
+        self._attr_unique_id = (
+            f"premium_bond_checker-{holder_number}-{period_key}-prize"
+        )
+
+    @property
+    def _result(self):
+        return self.coordinator.data.checker_data.results[self._bond_period]
+
+    @property
+    def native_value(self) -> int:
+        """Return the total prize value for this bond period."""
+        return self._result.total_prize()
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return state attributes."""
+        return {
+            ATTR_HEADER: self._result.header,
+            ATTR_TAGLINE: self._result.tagline,
         }
 
 

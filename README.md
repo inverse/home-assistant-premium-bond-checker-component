@@ -16,6 +16,7 @@ It fetches data from [NS&I][nsandi], leveraging the [premium-bond-checker][premi
   - This month
   - Last 6 months
   - Unclaimed
+- Prize value sensors with the total prize amount for each of those periods
 - Sensor for the next draw date
 
 ## Installation
