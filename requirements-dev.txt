@@ -5,4 +5,4 @@ pytest-homeassistant-custom-component
 pytest-asyncio
 bump-my-version==1.5.1
 # From manifest
-premium-bond-checker==1.1.1
+premium-bond-checker==1.2.0
