@@ -8,7 +8,7 @@
 
 A [Home Assistant][home-assistant] component for creating sensors for checking if your holder number(s) have won on the premium bonds.
 
-It fetches data from [Nsandi], leveraging the [premium-bond-checker][premium-bond-checker-package] package.
+It fetches data from [NS&I][nsandi], leveraging the [premium-bond-checker][premium-bond-checker-package] package.
 
 ## What it provides
 
