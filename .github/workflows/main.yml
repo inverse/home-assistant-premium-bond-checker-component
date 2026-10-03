@@ -10,7 +10,7 @@ env:
 
 jobs:
   pre-commit:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
       - uses: jdx/mise-action@v4
