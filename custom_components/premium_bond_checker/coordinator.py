@@ -5,7 +5,6 @@ import logging
 from datetime import date, timedelta
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from premium_bond_checker.client import Client
@@ -13,8 +12,6 @@ from premium_bond_checker.client import Client
 from .const import CONF_HOLDER_NUMBER, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
-
-PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(days=1)
 

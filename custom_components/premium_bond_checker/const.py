@@ -12,9 +12,7 @@ DEFAULT_SCAN_INTERVAL_WEEKS = 4
 
 CONF_HOLDER_NUMBER = "holder_number"
 
-COORDINATOR_CHECKER = "checker"
-COORDINATOR_NEXT_DRAW = "next_draw"
-
+COORDINATOR = "coordinator"
 
 ATTR_HEADER = "header"
 ATTR_TAGLINE = "tagline"

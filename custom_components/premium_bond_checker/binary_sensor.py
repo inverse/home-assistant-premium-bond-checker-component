@@ -9,7 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from premium_bond_checker.models import Result
 
-from . import COORDINATOR_CHECKER, PremiumBondCoordinator
+from . import COORDINATOR, PremiumBondCoordinator
 from .const import ATTR_HEADER, ATTR_TAGLINE, BOND_PERIOD_CONFIG, DOMAIN
 from .entity import PremiumBondCheckerEntity
 
@@ -23,7 +23,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up Premium Bond Checker binary sensor platform."""
 
-    coordinator = hass.data[DOMAIN][config_entry.entry_id][COORDINATOR_CHECKER]
+    coordinator = hass.data[DOMAIN][config_entry.entry_id][COORDINATOR]
 
     entities = []
     for period_key, (bond_period, name) in BOND_PERIOD_CONFIG.items():
