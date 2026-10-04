@@ -46,9 +46,8 @@ actions:
     data:
       title: "Premium Bond Win!"
       message: >
-        {{ sensor.premium_bond_checker_<your_holder_number>_this_month', 'header') }}
-
-        {{ sensor.premium_bond_checker_<your_holder_number>_this_month', 'tagline') }}
+        {{ state_attr('sensor.premium_bond_checker_<your_holder_number>_this_month', 'header') }}
+        {{ state_attr('sensor.premium_bond_checker_<your_holder_number>_this_month', 'tagline') }}
 ```
 
 <!-- Badges -->
