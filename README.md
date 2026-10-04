@@ -38,16 +38,21 @@ alias: Premium Bond Win
 triggers:
   - trigger: state
     entity_id:
-      - sensor.premium_bond_checker_<your_holder_number>_this_month
-    from: "off"
-    to: "on"
+      - binary_sensor.premium_bond_checker_<your_holder_number>_this_month
+    attribute: tagline
+conditions:
+  - condition: state
+    entity_id: binary_sensor.premium_bond_checker_<your_holder_number>_this_month
+    state:
+      - "on"
 actions:
   - action: notify.<your_notifier>
     data:
-      title: "Premium Bond Win!"
-      message: >
-        {{ state_attr('sensor.premium_bond_checker_<your_holder_number>_this_month', 'header') }}
-        {{ state_attr('sensor.premium_bond_checker_<your_holder_number>_this_month', 'tagline') }}
+      title: Premium Bond Win!
+      message: >-
+        {{ state_attr('binary_sensor.premium_bond_checker_<your_holder_number>_this_month', 'header') }}
+        {{ state_attr('binary_sensor.premium_bond_checker_<your_holder_number>_this_month',
+        'tagline') }}
 ```
 
 <!-- Badges -->
