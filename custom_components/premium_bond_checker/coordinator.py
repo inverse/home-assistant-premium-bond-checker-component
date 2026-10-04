@@ -4,12 +4,13 @@ import dataclasses
 import logging
 from datetime import date, timedelta
 
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from premium_bond_checker.client import Client
 
-from .const import DOMAIN
+from .const import CONF_HOLDER_NUMBER, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,12 +36,16 @@ class PremiumBondData:
 class PremiumBondCoordinator(DataUpdateCoordinator):
     """Unified coordinator for Premium Bond Checker."""
 
-    def __init__(self, hass: HomeAssistant, holder_number: str):
+    def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry):
         """Init the premium bond checker data object."""
         self.client = Client()
-        self.holder_number = holder_number
+        self.holder_number = config_entry.data[CONF_HOLDER_NUMBER]
         super().__init__(
-            hass, _LOGGER, name=DOMAIN, update_interval=MIN_TIME_BETWEEN_UPDATES
+            hass,
+            _LOGGER,
+            name=DOMAIN,
+            update_interval=MIN_TIME_BETWEEN_UPDATES,
+            config_entry=config_entry,
         )
 
     async def _async_update_data(self):
