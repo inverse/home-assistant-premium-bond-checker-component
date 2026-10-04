@@ -81,7 +81,7 @@ async def create_and_update_coordinator(
     return coordinator
 
 
-async def update_listener(hass, config_entry):
+async def update_listener(hass: HomeAssistant, config_entry: ConfigEntry) -> None:
     """Handle options update."""
 
     _LOGGER.debug(
