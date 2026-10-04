@@ -80,7 +80,7 @@ async def create_and_update_coordinator(
     _LOGGER.debug(
         "Registering instance for holder number: %s", entry.data[CONF_HOLDER_NUMBER]
     )
-    coordinator = PremiumBondCoordinator(hass, entry.data[CONF_HOLDER_NUMBER])
+    coordinator = PremiumBondCoordinator(hass, entry)
     _LOGGER.debug(
         "Requesting instance update for holder number: %s",
         entry.data[CONF_HOLDER_NUMBER],

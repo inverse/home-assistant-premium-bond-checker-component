@@ -11,6 +11,7 @@ It fetches data from [NS&I][nsandi], leveraging the [premium-bond-checker][premi
 
 ## What it provides
 
+- A service device for each configured holder number, grouping its sensors
 - Binary sensors for each holder number you configure including metadata around the result for:
   - This month
   - Last six months (`last_six_months`)

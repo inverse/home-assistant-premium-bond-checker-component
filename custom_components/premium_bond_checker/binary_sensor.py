@@ -7,17 +7,11 @@ from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from premium_bond_checker.models import Result
 
 from . import COORDINATOR_CHECKER, PremiumBondCoordinator
-from .const import (
-    ATTR_HEADER,
-    ATTR_TAGLINE,
-    BOND_PERIOD_CONFIG,
-    CONF_HOLDER_NUMBER,
-    DOMAIN,
-)
+from .const import ATTR_HEADER, ATTR_TAGLINE, BOND_PERIOD_CONFIG, DOMAIN
+from .entity import PremiumBondCheckerEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -37,7 +31,6 @@ async def async_setup_entry(
         entities.append(
             PremiumBondCheckerSensor(
                 coordinator,
-                config_entry.data[CONF_HOLDER_NUMBER],
                 period_key,
                 bond_period,
                 name,
@@ -47,19 +40,20 @@ async def async_setup_entry(
     async_add_entities(entities)
 
 
-class PremiumBondCheckerSensor(CoordinatorEntity, BinarySensorEntity):
+class PremiumBondCheckerSensor(PremiumBondCheckerEntity, BinarySensorEntity):
     def __init__(
         self,
         coordinator: PremiumBondCoordinator,
-        holder_number: str,
         period_key: str,
         bond_period: str,
         name: str,
     ):
         super().__init__(coordinator)
         self._bond_period = bond_period
-        self._attr_name = f"Premium Bond Checker {holder_number} {name}"
-        self._attr_unique_id = f"premium_bond_checker-{holder_number}-{period_key}"
+        self._attr_name = name
+        self._attr_unique_id = (
+            f"premium_bond_checker-{coordinator.holder_number}-{period_key}"
+        )
 
     @property
     def is_on(self) -> bool:
