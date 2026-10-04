@@ -5,8 +5,10 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 
 from .const import (
+    BOND_PERIOD_CONFIG,
     CONF_HOLDER_NUMBER,
     COORDINATOR_CHECKER,
     COORDINATOR_NEXT_DRAW,
@@ -17,6 +19,25 @@ from .coordinator import PremiumBondCoordinator
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [Platform.BINARY_SENSOR, Platform.SENSOR]
+
+
+def _remove_migrated_checker_sensors(
+    hass: HomeAssistant, config_entry: ConfigEntry
+) -> None:
+    """Drop sensor entries left when checkers moved to binary_sensor."""
+    entity_registry = er.async_get(hass)
+    holder_number = config_entry.data[CONF_HOLDER_NUMBER]
+    stale_ids = {
+        f"premium_bond_checker-{holder_number}-{period_key}"
+        for period_key in BOND_PERIOD_CONFIG
+    }
+    for entry in er.async_entries_for_config_entry(
+        entity_registry, config_entry.entry_id
+    ):
+        if entry.domain != Platform.SENSOR or entry.unique_id not in stale_ids:
+            continue
+        entity_registry.async_remove(entry.entity_id)
+        _LOGGER.info("Removed migrated sensor entity %s", entry.entity_id)
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
@@ -35,6 +56,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     hass.data[DOMAIN][config_entry.entry_id][COORDINATOR_NEXT_DRAW] = hass.data[DOMAIN][
         config_entry.entry_id
     ][COORDINATOR_CHECKER]
+
+    _remove_migrated_checker_sensors(hass, config_entry)
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
 
