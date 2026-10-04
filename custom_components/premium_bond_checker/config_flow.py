@@ -45,6 +45,11 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[call
                 step_id="user", data_schema=STEP_USER_DATA_SCHEMA
             )
 
+        holder_number = user_input[CONF_HOLDER_NUMBER]
+        await self.async_set_unique_id(holder_number)
+        self._abort_if_unique_id_configured()
+        self._async_abort_entries_match({CONF_HOLDER_NUMBER: holder_number})
+
         errors = {}
 
         try:
