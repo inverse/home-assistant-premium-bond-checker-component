@@ -7,13 +7,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
-from .const import (
-    BOND_PERIOD_CONFIG,
-    CONF_HOLDER_NUMBER,
-    COORDINATOR_CHECKER,
-    COORDINATOR_NEXT_DRAW,
-    DOMAIN,
-)
+from .const import BOND_PERIOD_CONFIG, CONF_HOLDER_NUMBER, COORDINATOR, DOMAIN
 from .coordinator import PremiumBondCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -51,11 +45,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN].setdefault(config_entry.entry_id, {})
     hass.data[DOMAIN][config_entry.entry_id][
-        COORDINATOR_CHECKER
+        COORDINATOR
     ] = await create_and_update_coordinator(hass, config_entry)
-    hass.data[DOMAIN][config_entry.entry_id][COORDINATOR_NEXT_DRAW] = hass.data[DOMAIN][
-        config_entry.entry_id
-    ][COORDINATOR_CHECKER]
 
     _remove_migrated_checker_sensors(hass, config_entry)
 

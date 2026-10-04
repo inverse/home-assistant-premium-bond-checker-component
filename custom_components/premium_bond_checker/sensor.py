@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt
 
-from . import COORDINATOR_CHECKER, COORDINATOR_NEXT_DRAW, PremiumBondCoordinator
+from . import COORDINATOR, PremiumBondCoordinator
 from .const import ATTR_HEADER, ATTR_REVEAL_BY, ATTR_TAGLINE, BOND_PERIOD_CONFIG, DOMAIN
 from .entity import PremiumBondCheckerEntity
 
@@ -24,9 +24,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up Premium Bond Checker sensor platform."""
 
-    checker_coordinator = hass.data[DOMAIN][config_entry.entry_id][COORDINATOR_CHECKER]
-
-    coordinator = hass.data[DOMAIN][config_entry.entry_id][COORDINATOR_NEXT_DRAW]
+    coordinator = hass.data[DOMAIN][config_entry.entry_id][COORDINATOR]
 
     entities = []
 
@@ -39,7 +37,7 @@ async def async_setup_entry(
         _LOGGER.debug("Adding prize value sensor for %s", period_key)
         entities.append(
             PremiumBondPrizeValueSensor(
-                checker_coordinator,
+                coordinator,
                 period_key,
                 bond_period,
                 name,
