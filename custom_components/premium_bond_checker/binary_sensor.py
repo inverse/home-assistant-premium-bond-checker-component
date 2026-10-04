@@ -57,8 +57,8 @@ class PremiumBondCheckerSensor(PremiumBondCheckerEntity, BinarySensorEntity):
 
     @property
     def is_on(self) -> bool:
-        """Return if won"""
-        _LOGGER.debug(f"Got {self.data.won} for {self.data.bond_period}")
+        """Return if won."""
+        _LOGGER.debug("Got %s for %s", self.data.won, self.data.bond_period)
 
         return self.data.won
 

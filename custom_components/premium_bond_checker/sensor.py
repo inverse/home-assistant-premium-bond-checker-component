@@ -104,7 +104,7 @@ class PremiumBondNextDrawSensor(PremiumBondCheckerEntity, SensorEntity):
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        _LOGGER.debug(f"Got next draw value of {self.coordinator.data}")
+        _LOGGER.debug("Got next draw value of %s", self.coordinator.data)
 
         return self.coordinator.data.next_draw_data.next_draw_date
 
