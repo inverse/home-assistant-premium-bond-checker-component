@@ -19,13 +19,37 @@
     }
   },
   "entity": {
+    "binary_sensor": {
+      "this_month": {
+        "name": "This Month"
+      },
+      "last_six_months": {
+        "name": "Last Six Months"
+      },
+      "unclaimed": {
+        "name": "Unclaimed"
+      }
+    },
     "sensor": {
       "next_draw": {
+        "name": "Next Draw",
         "state_attributes": {
           "reveal_by": {
             "name": "Reveal by"
           }
         }
+      },
+      "next_draw_days_remaining": {
+        "name": "Next Draw Days Remaining"
+      },
+      "this_month_prize": {
+        "name": "This Month Prize"
+      },
+      "last_six_months_prize": {
+        "name": "Last Six Months Prize"
+      },
+      "unclaimed_prize": {
+        "name": "Unclaimed Prize"
       }
     }
   }

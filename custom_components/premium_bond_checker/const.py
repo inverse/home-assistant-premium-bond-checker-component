@@ -1,9 +1,9 @@
 from premium_bond_checker.client import BondPeriod
 
 BOND_PERIOD_CONFIG = {
-    "this_month": (BondPeriod.THIS_MONTH, "This Month"),
-    "last_six_months": (BondPeriod.LAST_SIX_MONTHS, "Last Six Months"),
-    "unclaimed": (BondPeriod.UNCLAIMED, "Unclaimed"),
+    "this_month": BondPeriod.THIS_MONTH,
+    "last_six_months": BondPeriod.LAST_SIX_MONTHS,
+    "unclaimed": BondPeriod.UNCLAIMED,
 }
 
 DOMAIN = "premium_bond_checker"
