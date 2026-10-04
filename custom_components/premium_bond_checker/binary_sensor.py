@@ -26,14 +26,13 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][config_entry.entry_id][COORDINATOR]
 
     entities = []
-    for period_key, (bond_period, name) in BOND_PERIOD_CONFIG.items():
+    for period_key, bond_period in BOND_PERIOD_CONFIG.items():
         _LOGGER.debug("Adding binary sensor for %s", period_key)
         entities.append(
             PremiumBondCheckerSensor(
                 coordinator,
                 period_key,
                 bond_period,
-                name,
             )
         )
 
@@ -46,11 +45,10 @@ class PremiumBondCheckerSensor(PremiumBondCheckerEntity, BinarySensorEntity):
         coordinator: PremiumBondCoordinator,
         period_key: str,
         bond_period: str,
-        name: str,
     ):
         super().__init__(coordinator)
         self._bond_period = bond_period
-        self._attr_name = name
+        self._attr_translation_key = period_key
         self._attr_unique_id = (
             f"premium_bond_checker-{coordinator.holder_number}-{period_key}"
         )
