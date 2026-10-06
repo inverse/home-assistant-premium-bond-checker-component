@@ -22,3 +22,8 @@ class PremiumBondCheckerEntity(CoordinatorEntity[PremiumBondCoordinator]):
             model="Premium Bond Checker",
             entry_type=DeviceEntryType.SERVICE,
         )
+
+    @property
+    def available(self) -> bool:
+        """Return True if the coordinator's last update succeeded."""
+        return self.coordinator.last_update_success

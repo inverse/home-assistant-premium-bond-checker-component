@@ -53,7 +53,9 @@ class PremiumBondCoordinator(DataUpdateCoordinator):
         try:
             return await self.hass.async_add_executor_job(self._fetch_all_data)
         except Exception as err:
-            raise UpdateFailed(f"Error communicating with API: {err}") from err
+            raise UpdateFailed(
+                f"Error communicating with API: {err}", retry_after=60
+            ) from err
 
     def _fetch_all_data(self) -> PremiumBondData:
         """Fetch all data synchronously."""
