@@ -40,7 +40,7 @@
         }
       },
       "next_draw_days_remaining": {
-        "name": "Next Draw Days Remaining"
+        "name": "Days Until Next Draw"
       },
       "this_month_prize": {
         "name": "This Month Prize"
