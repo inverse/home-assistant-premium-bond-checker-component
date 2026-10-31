@@ -9,7 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from premium_bond_checker.client import Client
 
-from .const import CONF_HOLDER_NUMBER, DOMAIN
+from .const import CONF_HOLDER_NUMBER, DOMAIN, redact_holder_number
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -19,7 +19,10 @@ STEP_USER_DATA_SCHEMA = vol.Schema({vol.Required(CONF_HOLDER_NUMBER): str})
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> None:
     """Check we can get data for the property."""
 
-    _LOGGER.debug("Validating holder number: %s", data[CONF_HOLDER_NUMBER])
+    _LOGGER.debug(
+        "Validating holder number: %s",
+        redact_holder_number(data[CONF_HOLDER_NUMBER]),
+    )
 
     client = Client()
     is_valid_holder_number = await hass.async_add_executor_job(
@@ -56,7 +59,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[call
             await validate_input(self.hass, user_input)
         except InvalidHolderNumber:
             _LOGGER.debug(
-                "Holder number is invalid: %s", user_input[CONF_HOLDER_NUMBER]
+                "Holder number is invalid: %s",
+                redact_holder_number(user_input[CONF_HOLDER_NUMBER]),
             )
 
             errors["base"] = "invalid_holder_number"
