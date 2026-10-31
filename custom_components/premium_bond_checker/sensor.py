@@ -1,6 +1,7 @@
 """Support for Premium Bond Checker sensors."""
 
 import logging
+from datetime import date
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -10,6 +11,7 @@ from homeassistant.const import UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt
+from premium_bond_checker.models import Result
 
 from . import COORDINATOR, PremiumBondCoordinator
 from .const import ATTR_HEADER, ATTR_REVEAL_BY, ATTR_TAGLINE, BOND_PERIOD_CONFIG, DOMAIN
@@ -71,7 +73,7 @@ class PremiumBondPrizeValueSensor(PremiumBondCheckerEntity, SensorEntity):
         )
 
     @property
-    def _result(self):
+    def _result(self) -> Result:
         return self.coordinator.data.checker_data.results[self._bond_period]
 
     @property
@@ -100,7 +102,7 @@ class PremiumBondNextDrawSensor(PremiumBondCheckerEntity, SensorEntity):
         )
 
     @property
-    def native_value(self):
+    def native_value(self) -> date:
         """Return the state of the sensor."""
         _LOGGER.debug("Got next draw value of %s", self.coordinator.data)
 
@@ -127,7 +129,7 @@ class PremiumBondNextDrawDaysRemainingSensor(PremiumBondCheckerEntity, SensorEnt
         )
 
     @property
-    def native_value(self):
+    def native_value(self) -> int:
         """Return the state of the sensor."""
         return (
             self.coordinator.data.next_draw_data.next_draw_date
