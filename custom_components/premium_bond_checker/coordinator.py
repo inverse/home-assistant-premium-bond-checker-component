@@ -10,7 +10,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from premium_bond_checker.client import Client
 from premium_bond_checker.models import CheckResult
 
-from .const import CONF_HOLDER_NUMBER, DOMAIN
+from .const import CONF_HOLDER_NUMBER, DOMAIN, redact_holder_number
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -49,14 +49,13 @@ class PremiumBondCoordinator(DataUpdateCoordinator[PremiumBondData]):
     async def _async_update_data(self) -> PremiumBondData:
         """Get the latest data."""
         _LOGGER.debug(
-            "Allowing instance update for holder number: %s", self.holder_number
+            "Allowing instance update for holder number: %s",
+            redact_holder_number(self.holder_number),
         )
         try:
             return await self.hass.async_add_executor_job(self._fetch_all_data)
         except Exception as err:
-            raise UpdateFailed(
-                f"Error communicating with API: {err}", retry_after=60
-            ) from err
+            raise UpdateFailed("Error communicating with API", retry_after=60) from err
 
     def _fetch_all_data(self) -> PremiumBondData:
         """Fetch all data synchronously."""

@@ -7,7 +7,13 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
-from .const import BOND_PERIOD_CONFIG, CONF_HOLDER_NUMBER, COORDINATOR, DOMAIN
+from .const import (
+    BOND_PERIOD_CONFIG,
+    CONF_HOLDER_NUMBER,
+    COORDINATOR,
+    DOMAIN,
+    redact_holder_number,
+)
 from .coordinator import PremiumBondCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -38,7 +44,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     """Set up Premium Bond Checker from a config entry."""
 
     _LOGGER.debug(
-        "Setting up entry for holder number: %s", config_entry.data[CONF_HOLDER_NUMBER]
+        "Setting up entry for holder number: %s",
+        redact_holder_number(config_entry.data[CONF_HOLDER_NUMBER]),
     )
 
     config_entry.async_on_unload(config_entry.add_update_listener(update_listener))
@@ -69,12 +76,13 @@ async def create_and_update_coordinator(
 ) -> PremiumBondCoordinator:
     """Create and update a Premium Bond Checker coordinator."""
     _LOGGER.debug(
-        "Registering instance for holder number: %s", entry.data[CONF_HOLDER_NUMBER]
+        "Registering instance for holder number: %s",
+        redact_holder_number(entry.data[CONF_HOLDER_NUMBER]),
     )
     coordinator = PremiumBondCoordinator(hass, entry)
     _LOGGER.debug(
         "Requesting instance update for holder number: %s",
-        entry.data[CONF_HOLDER_NUMBER],
+        redact_holder_number(entry.data[CONF_HOLDER_NUMBER]),
     )
     await coordinator.async_config_entry_first_refresh()
 
@@ -86,7 +94,7 @@ async def update_listener(hass: HomeAssistant, config_entry: ConfigEntry) -> Non
 
     _LOGGER.debug(
         "Handling options change for holder number: %s",
-        config_entry.data[CONF_HOLDER_NUMBER],
+        redact_holder_number(config_entry.data[CONF_HOLDER_NUMBER]),
     )
 
     await hass.config_entries.async_reload(config_entry.entry_id)
