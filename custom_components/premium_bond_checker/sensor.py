@@ -2,6 +2,7 @@
 
 import logging
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
@@ -15,6 +16,8 @@ from .const import ATTR_HEADER, ATTR_REVEAL_BY, ATTR_TAGLINE, BOND_PERIOD_CONFIG
 from .entity import PremiumBondCheckerEntity
 
 _LOGGER = logging.getLogger(__name__)
+
+LONDON_TIMEZONE = ZoneInfo("Europe/London")
 
 
 async def async_setup_entry(
@@ -127,5 +130,6 @@ class PremiumBondNextDrawDaysRemainingSensor(PremiumBondCheckerEntity, SensorEnt
     def native_value(self):
         """Return the state of the sensor."""
         return (
-            self.coordinator.data.next_draw_data.next_draw_date - dt.now().date()
+            self.coordinator.data.next_draw_data.next_draw_date
+            - dt.now(LONDON_TIMEZONE).date()
         ).days
