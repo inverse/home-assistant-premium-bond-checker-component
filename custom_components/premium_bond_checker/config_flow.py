@@ -37,7 +37,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[call
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.ConfigFlow:
+    ) -> config_entries.ConfigFlowResult:
         """Handle the initial step."""
         if user_input is None:
             _LOGGER.debug("Showing empty form for holder number.")

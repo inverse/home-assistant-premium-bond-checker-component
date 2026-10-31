@@ -65,7 +65,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def create_and_update_coordinator(
-    hass, entry: ConfigEntry
+    hass: HomeAssistant, entry: ConfigEntry
 ) -> PremiumBondCoordinator:
     """Create and update a Premium Bond Checker coordinator."""
     _LOGGER.debug(

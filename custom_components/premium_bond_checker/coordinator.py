@@ -8,6 +8,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from premium_bond_checker.client import Client
+from premium_bond_checker.models import CheckResult
 
 from .const import CONF_HOLDER_NUMBER, DOMAIN
 
@@ -26,14 +27,14 @@ class NextDrawDataResult:
 class PremiumBondData:
     """Data object for the coordinator."""
 
-    checker_data: dict
+    checker_data: CheckResult
     next_draw_data: NextDrawDataResult
 
 
-class PremiumBondCoordinator(DataUpdateCoordinator):
+class PremiumBondCoordinator(DataUpdateCoordinator[PremiumBondData]):
     """Unified coordinator for Premium Bond Checker."""
 
-    def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry):
+    def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Init the premium bond checker data object."""
         self.client = Client()
         self.holder_number = config_entry.data[CONF_HOLDER_NUMBER]
@@ -45,7 +46,7 @@ class PremiumBondCoordinator(DataUpdateCoordinator):
             config_entry=config_entry,
         )
 
-    async def _async_update_data(self):
+    async def _async_update_data(self) -> PremiumBondData:
         """Get the latest data."""
         _LOGGER.debug(
             "Allowing instance update for holder number: %s", self.holder_number
